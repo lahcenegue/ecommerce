@@ -1,5 +1,6 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../ViewModels/categories_viewmodel.dart';
 import '../core/widgets/categories_box.dart';
 import '../core/widgets/images_slider.dart';
@@ -39,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
     });
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        //backgroundColor: Color(0xfff2f2f2),
         body: hvm.mainData == null || hvm.listCategories == null
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -186,9 +187,15 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     const SizedBox(height: 8),
                     SizedBox(
-                      child: ListView.builder(
+                      child: MasonryGridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        gridDelegate:
+                            const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
                         itemCount: hvm.adsLenght,
                         itemBuilder: (context, index) {
                           return productBox(

@@ -3,4 +3,5 @@ class AppIcons {
   static const String category = 'assets/icons/category.png';
   static const String announce = 'assets/icons/annonce.png';
   static const String person = 'assets/icons/person.png';
+  static const String money = 'assets/icons/money.png';
 }

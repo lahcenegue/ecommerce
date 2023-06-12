@@ -80,7 +80,8 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
       },
       icon: Icon(
         Icons.favorite_rounded,
-        color: isFavorite ? Colors.red : Colors.grey,
+        color: isFavorite ? Colors.red : Colors.white,
+        size: 28,
       ),
     );
   }

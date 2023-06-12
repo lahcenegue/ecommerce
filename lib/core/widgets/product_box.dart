@@ -1,3 +1,4 @@
+import 'package:ecommerce/core/utils/app_icons.dart';
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import 'button_favorite.dart';
@@ -15,99 +16,135 @@ Widget productBox({
   return Stack(
     children: [
       Container(
-        width: widthSceeren,
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        padding: const EdgeInsets.all(10),
+        height: widthSceeren * 0.6,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 5,
-              offset: Offset.fromDirection(8),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(10),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                errorBuilder: (context, error, stackTrace) {
-                  return const Text('error');
-                },
-                image,
-                width: widthSceeren * 0.25,
-                height: widthSceeren * 0.25,
-                fit: BoxFit.cover,
+            Container(
+              width: widthSceeren * 0.45,
+              height: widthSceeren * 0.43,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage(image),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            SizedBox(width: widthSceeren * 0.03),
-            SizedBox(
-              width: widthSceeren * 0.6,
-              height: widthSceeren * 0.25,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: widthSceeren * 0.5,
-                    child: Text(
+            Positioned(
+              bottom: 0,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                width: widthSceeren * 0.44,
+                height: widthSceeren * 0.22,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
                       title,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontSize: 16,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                  Text(
-                    desc,
-                    maxLines: 2,
-                  ),
-                  iconText(price: price, time: created),
-                ],
+                    const Spacer(flex: 1),
+                    Text(
+                      desc,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xffc1c1c1),
+                      ),
+                    ),
+                    const Spacer(flex: 3),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          AppIcons.money,
+                          width: widthSceeren * 0.05,
+                        ),
+                        const SizedBox(width: 08),
+                        Text(price),
+                        const Spacer(),
+                        Text(
+                          'منذ $created',
+                          style: const TextStyle(
+                            color: Color(0xffc1c1c1),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
-      Positioned(
-        top: 08,
-        left: 08,
-        child: ButtonFavorite(
-          id: id,
-          title: title,
-          image: image,
-          created: created,
-          price: price,
-          desc: desc,
-          userId: userId,
-        ),
-      )
+      ///////
+      ButtonFavorite(
+        id: id,
+        title: title,
+        image: image,
+        created: created,
+        price: price,
+        desc: desc,
+        userId: userId,
+      ),
     ],
   );
 }
 
-Widget iconText({
-  required String price,
-  required String time,
-}) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    children: [
-      const Spacer(),
-      Icon(Icons.money_rounded, color: AppColors.primary),
-      const SizedBox(width: 03),
-      Text(price, style: TextStyle(color: AppColors.primary, fontSize: 14)),
-      const Spacer(),
-      //
-      Icon(Icons.access_time, color: AppColors.primary),
-      const SizedBox(width: 03),
-      Text(time, style: TextStyle(color: AppColors.primary, fontSize: 14)),
-      const Spacer(),
-    ],
-  );
-}
+
+
+
+
+//             SizedBox(
+//               width: widthSceeren * 0.6,
+//               height: widthSceeren * 0.25,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     width: widthSceeren * 0.5,
+//                     child: Text(
+//                       title,
+//                       overflow: TextOverflow.ellipsis,
+//                       style: TextStyle(
+//                         color: AppColors.primary,
+//                         fontSize: 16,
+//                       ),
+//                     ),
+//                   ),
+//                   Text(
+//                     desc,
+//                     maxLines: 2,
+//                   ),
+//                   iconText(price: price, time: created),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//       Positioned(
+//         top: 08,
+//         left: 08,
+
+//       )
+//     ],
+//   );

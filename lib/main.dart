@@ -24,8 +24,11 @@ class MyApp extends StatelessWidget {
       locale: const Locale("ar"),
       theme: ThemeData(
         fontFamily: 'MessiriFont',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Colors.deepPurple).copyWith(
+          background: Color(0xfff2f2f2),
+        ),
       ),
       home: const HomeScreen(),
     );
