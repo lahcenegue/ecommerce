@@ -53,23 +53,47 @@ class MyAccount extends StatelessWidget {
                   children: [
                     // notification
                     custtomCard(
-                      icon: const Icon(Icons.notifications),
-                      title: 'notification',
+                      icon: Icon(
+                        Icons.notifications,
+                        color: AppColors.primary,
+                      ),
+                      title: 'تفعيل الاشعارات',
+                      onTap: () {
+                        print('notification');
+                      },
                     ),
                     // favorite
                     custtomCard(
-                      icon: const Icon(Icons.favorite_border),
-                      title: 'notification',
+                      icon: Icon(
+                        Icons.favorite,
+                        color: AppColors.primary,
+                      ),
+                      title: 'المفضلة',
+                      onTap: () {
+                        print('favorite');
+                      },
                     ),
                     //help
                     custtomCard(
-                      icon: const Icon(Icons.help),
-                      title: 'notification',
+                      icon: Icon(
+                        Icons.help,
+                        color: AppColors.primary,
+                      ),
+                      title: 'المساعدة',
+                      onTap: () {
+                        print('help');
+                      },
                     ),
                     //log out
                     custtomCard(
-                      icon: const Icon(Icons.logout),
-                      title: 'notification',
+                      icon: Icon(
+                        Icons.logout_rounded,
+                        color: AppColors.primary,
+                      ),
+                      title: 'تسجيل الخروج',
+                      onTap: () {
+                        print('logout');
+                      },
                     ),
                   ],
                 ),
