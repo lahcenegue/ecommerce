@@ -1,6 +1,6 @@
 class MainModel {
   List<BannerModel>? banners;
-  List<AdsModel>? ads;
+  List<AdsModels>? ads;
   MainModel({
     required this.banners,
     required this.ads,
@@ -16,10 +16,10 @@ class MainModel {
       );
     }
     if (json['lastads'] != null) {
-      ads = <AdsModel>[];
+      ads = <AdsModels>[];
       json['lastads'].forEach(
         (v) {
-          ads!.add(AdsModel.fromJson(v));
+          ads!.add(AdsModels.fromJson(v));
         },
       );
     }
@@ -41,7 +41,7 @@ class BannerModel {
   }
 }
 
-class AdsModel {
+class AdsModels {
   int? id;
   String? title;
   String? image;
@@ -50,7 +50,7 @@ class AdsModel {
   String? desc;
   String? userId;
 
-  AdsModel({
+  AdsModels({
     required this.id,
     required this.title,
     required this.image,
@@ -60,7 +60,7 @@ class AdsModel {
     required this.userId,
   });
 
-  AdsModel.fromJson(Map<String, dynamic> json) {
+  AdsModels.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['ad_title'];
     image = json['primary_img'];
