@@ -1,4 +1,6 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/screens/my_account.dart';
+import 'package:ecommerce/screens/my_announces.dart';
 import 'package:flutter/material.dart';
 
 import '../core/utils/app_icons.dart';
@@ -17,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List pages = const [
     MainScreen(),
     Text('1'),
-    Text('2'),
-    Text('3'),
+    MyAnnonces(),
+    MyAccount(),
   ];
   @override
   Widget build(BuildContext context) {
