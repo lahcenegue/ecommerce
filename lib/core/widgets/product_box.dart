@@ -1,7 +1,6 @@
 import 'package:ecommerce/core/utils/app_icons.dart';
 import 'package:ecommerce/screens/ads_screen.dart';
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
 import 'button_favorite.dart';
 
 Widget productBox({

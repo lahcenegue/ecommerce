@@ -21,20 +21,31 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
     return Container(
       width: widthScreen,
       padding: const EdgeInsets.symmetric(horizontal: 05),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       height: 60,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // 1st
           SizedBox(
-            width: widthScreen * 0.40,
+            width: widthScreen * 0.38,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
                   onTap: widget.items![0].onTap,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 08, horizontal: 03),
+                        vertical: 08, horizontal: 04),
                     width: widthScreen * 0.19,
                     decoration: BoxDecoration(
                       color: widget.selectedIndex == 0
@@ -43,7 +54,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                       borderRadius: BorderRadius.circular(08),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
                           widget.items![0].icon,
@@ -74,7 +85,9 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 08, horizontal: 03),
-                    width: widthScreen * 0.19,
+                    width: widget.selectedIndex == 2
+                        ? widthScreen * 0.12
+                        : widthScreen * 0.19,
                     decoration: BoxDecoration(
                       color: widget.selectedIndex == 1
                           ? AppColors.primary.withOpacity(0.2)
@@ -82,7 +95,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                       borderRadius: BorderRadius.circular(08),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
                           widget.items![1].icon,
@@ -111,13 +124,17 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           ),
 
           // space
-          SizedBox(width: widthScreen * 0.19),
+          SizedBox(
+              width: widget.selectedIndex == 1 || widget.selectedIndex == 2
+                  ? widthScreen * 0.19
+                  : widthScreen * 0.1),
 
           //اعلاناتي
+          //2 rd
           SizedBox(
             width: widthScreen * 0.38,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
                   onTap: widget.items![2].onTap,
@@ -132,7 +149,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                       borderRadius: BorderRadius.circular(08),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
                           widget.items![2].icon,
@@ -163,7 +180,9 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 08, horizontal: 03),
-                    width: widthScreen * 0.19,
+                    width: widget.selectedIndex == 3
+                        ? widthScreen * 0.19
+                        : widthScreen * 0.16,
                     decoration: BoxDecoration(
                       color: widget.selectedIndex == 3
                           ? AppColors.primary.withOpacity(0.2)
@@ -171,7 +190,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                       borderRadius: BorderRadius.circular(08),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
                           widget.items![3].icon,
