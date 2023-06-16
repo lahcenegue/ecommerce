@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme:
             ColorScheme.fromSeed(seedColor: Colors.deepPurple).copyWith(
-          background: Color(0xfff2f2f2),
+          background: const Color(0xfff2f2f2),
         ),
       ),
       home: const HomeScreen(),

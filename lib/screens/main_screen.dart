@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../ViewModels/categories_viewmodel.dart';
 import '../core/widgets/categories_box.dart';
-import '../core/widgets/images_slider.dart';
+import '../core/widgets/banner_slider.dart';
 import '../core/widgets/product_box.dart';
 import '../homeViewModel/home_view_model.dart';
 
@@ -128,7 +128,7 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ),
                           const Spacer(),
-                          ImagesSlider(
+                          BannerSlider(
                             height: heightScreen * 0.25,
                             urlImages: hvm.listBannerImages!,
                           ),

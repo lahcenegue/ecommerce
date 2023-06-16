@@ -1,4 +1,3 @@
-import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyAnnonces extends StatelessWidget {
@@ -6,6 +5,6 @@ class MyAnnonces extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

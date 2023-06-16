@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class ImagesSlider extends StatefulWidget {
+class BannerSlider extends StatefulWidget {
   final List urlImages;
   final double height;
-  const ImagesSlider(
+  const BannerSlider(
       {super.key, required this.urlImages, required this.height});
 
   @override
-  State<ImagesSlider> createState() => _ImagesSliderState();
+  State<BannerSlider> createState() => _BannerSliderState();
 }
 
-class _ImagesSliderState extends State<ImagesSlider> {
+class _BannerSliderState extends State<BannerSlider> {
   final controller = CarouselController();
 
   int activeIndex = 0;

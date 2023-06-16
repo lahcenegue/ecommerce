@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/sqldb.dart';
 
 class ButtonFavorite extends StatefulWidget {
+  final double? size;
   final int? id;
   final String? title;
   final String? image;
@@ -11,6 +12,7 @@ class ButtonFavorite extends StatefulWidget {
   final String? userId;
   const ButtonFavorite({
     super.key,
+    this.size,
     required this.id,
     required this.title,
     required this.image,
@@ -81,7 +83,7 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
       icon: Icon(
         Icons.favorite_rounded,
         color: isFavorite ? Colors.red : Colors.white,
-        size: 28,
+        size: widget.size ?? 28,
       ),
     );
   }
