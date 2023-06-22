@@ -13,14 +13,7 @@ class HomeViewModel extends ChangeNotifier {
   //variables
   MainViewModel? mainData;
   List<String>? listBannerImages;
-  int? adsLenght;
-  List<int>? listAdsId;
-  List<String>? listAdsTitle;
-  List<String>? listAdsImages;
-  List<String>? listAdsCreated;
-  List<String>? listAdsPrice;
-  List<String>? listAdsDesc;
-  List<String>? listAdsUserId;
+
   //categories
   List<CategoriesViewModel>? listCategories;
   //ads
@@ -33,15 +26,6 @@ class HomeViewModel extends ChangeNotifier {
     mainData = MainViewModel(mainModel: jsonMap);
     //banner
     listBannerImages = mainData!.bannerImages;
-    //ads
-    adsLenght = mainData!.adsLenght;
-    listAdsId = mainData!.adsId;
-    listAdsTitle = mainData!.adstitle;
-    listAdsImages = mainData!.adsImages;
-    listAdsCreated = mainData!.adsCreated;
-    listAdsPrice = mainData!.adsPrice;
-    listAdsDesc = mainData!.adsDesc;
-    listAdsUserId = mainData!.adsUserId;
 
     notifyListeners();
   }
