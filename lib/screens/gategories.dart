@@ -1,4 +1,5 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/core/widgets/icon_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -48,11 +49,12 @@ class CategoriesScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 05),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.category_rounded,
-                              color: AppColors.primary,
-                            ),
-                            const SizedBox(width: 04),
+                            SizedBox(
+                                height: heightScreen * 0.03,
+                                child: iconPiker(
+                                  categories[index].name,
+                                )),
+                            const SizedBox(width: 08),
                             Text(categories[index].name),
                           ],
                         ));
@@ -95,6 +97,7 @@ class SubCatWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
+            print(subCat[index].id);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => SubCategoryAds(

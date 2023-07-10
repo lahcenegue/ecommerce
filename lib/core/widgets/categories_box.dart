@@ -1,3 +1,4 @@
+import 'package:ecommerce/core/widgets/icon_piker.dart';
 import 'package:flutter/material.dart';
 
 Widget categoriesBox({
@@ -8,7 +9,7 @@ Widget categoriesBox({
     children: [
       Container(
         margin: const EdgeInsets.all(04),
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(15),
         width: 60,
         height: 60,
         alignment: Alignment.center,
@@ -16,6 +17,7 @@ Widget categoriesBox({
           color: const Color(0XffDFDAFF),
           borderRadius: BorderRadius.circular(10),
         ),
+        child: iconPiker(name),
       ),
       Text(
         name,

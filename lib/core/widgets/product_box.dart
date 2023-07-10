@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/core/utils/app_icons.dart';
 import 'package:ecommerce/screens/ads_screen.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +37,18 @@ Widget productBox({
                   height: widthSceeren * 0.43,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(image),
-                      fit: BoxFit.cover,
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: image,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 5,
+                        value: downloadProgress.progress,
+                      ),
                     ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
                 Positioned(

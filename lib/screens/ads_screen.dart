@@ -120,8 +120,8 @@ class _AdsScreenState extends State<AdsScreen> {
             ],
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        body: ListView(
+          //mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
               width: widthScreen,

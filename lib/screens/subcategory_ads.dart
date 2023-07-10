@@ -1,7 +1,9 @@
 import 'package:ecommerce/homeViewModel/home_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../core/utils/app_colors.dart';
+import '../core/widgets/product_box.dart';
 
 class SubCategoryAds extends StatefulWidget {
   final String title;
@@ -96,14 +98,75 @@ class _SubCategoryAdsState extends State<SubCategoryAds> {
         ),
         body: TabBarView(
           children: List.generate(hvm.listsubCategory!.subCat!.length, (index) {
-            return Container(
-              child: Column(children: [
-                Text(hvm.listsubCategory!.subCat![index].name!),
-              ]),
-            );
+            return SubCatAds(id: hvm.listsubCategory!.subCat![index].id!);
           }),
         ),
       ),
     );
+  }
+}
+
+class SubCatAds extends StatefulWidget {
+  final int id;
+  const SubCatAds({
+    super.key,
+    required this.id,
+  });
+
+  @override
+  State<SubCatAds> createState() => _SubCatAdsState();
+}
+
+class _SubCatAdsState extends State<SubCatAds> {
+  HomeViewModel hvm = HomeViewModel();
+
+  @override
+  void initState() {
+    hvm.fetchSubCatAds(id: widget.id);
+    super.initState();
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double widthScreen = MediaQuery.of(context).size.width;
+    hvm.addListener(() {
+      setState(() {});
+    });
+    if (hvm.subCatAds == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return MasonryGridView.builder(
+        physics: const BouncingScrollPhysics(),
+        mainAxisSpacing: 32,
+        crossAxisSpacing: 18,
+        shrinkWrap: true,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemCount: hvm.subCatAds!.length,
+        itemBuilder: (context, index) {
+          return productBox(
+            widthSceeren: widthScreen,
+            id: hvm.subCatAds![index].id!,
+            image: hvm.subCatAds![index].images![0],
+            title: hvm.subCatAds![index].title!,
+            desc: hvm.subCatAds![index].desc!,
+            price: hvm.subCatAds![index].price!,
+            created: hvm.subCatAds![index].created!,
+            userId: hvm.subCatAds![index].userId!,
+          );
+        },
+      );
+    }
   }
 }

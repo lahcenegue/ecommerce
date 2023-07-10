@@ -2,6 +2,7 @@ import 'package:ecommerce/ViewModels/ads_view_model.dart';
 import 'package:ecommerce/ViewModels/categories_viewmodel.dart';
 import 'package:ecommerce/ViewModels/main_view_model.dart';
 import 'package:ecommerce/data/ads_api.dart';
+import 'package:ecommerce/data/get_ads_api.dart';
 import 'package:ecommerce/data/sub_cat_api.dart';
 import 'package:flutter/material.dart';
 import '../ViewModels/subcat_view_model.dart';
@@ -19,6 +20,7 @@ class HomeViewModel extends ChangeNotifier {
   List<CategoriesViewModel>? listCategories;
   SubCategoryViewModel? listsubCategory;
   AdsViewModel? adsData;
+  List<AdsViewModel>? subCatAds;
 
 //functions
   // list Banner Images
@@ -52,6 +54,14 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> fetchAds({required int id}) async {
     AdsModel jsonMap = await getAdsData(id: id);
     adsData = AdsViewModel(adsModel: jsonMap);
+    notifyListeners();
+  }
+
+  //list Sub Cat Ads
+  Future<void> fetchSubCatAds({required int id}) async {
+    List<AdsModel> jsonMap = await getSubCatAds(id: id);
+    subCatAds = jsonMap.map((e) => AdsViewModel(adsModel: e)).toList();
+
     notifyListeners();
   }
 }

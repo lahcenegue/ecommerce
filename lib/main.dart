@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
           background: const Color(0xfff2f2f2),
         ),
       ),
-      home: LoginMobileScreen(),
-      //home: const HomeScreen(),
+      //home: LoginMobileScreen(),
+      home: const HomeScreen(),
     );
   }
 }
