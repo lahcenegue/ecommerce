@@ -1,8 +1,23 @@
+import 'package:ecommerce/screens/home_screen.dart';
+import 'package:ecommerce/screens/login_mobile_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'screens/home_screen.dart';
+import 'firebase_options.dart';
 
-void main() {
+String? phone;
+String? token;
+String? name;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // phone = prefs.getString("phone");
+  // token = prefs.getString("token");
+  // name = prefs.getString("name");
+
   runApp(const MyApp());
 }
 
@@ -30,7 +45,8 @@ class MyApp extends StatelessWidget {
           background: const Color(0xfff2f2f2),
         ),
       ),
-      home: const HomeScreen(),
+      home: LoginMobileScreen(),
+      //home: const HomeScreen(),
     );
   }
 }

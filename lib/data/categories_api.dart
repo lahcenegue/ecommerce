@@ -7,7 +7,7 @@ import '../models/categories_model.dart';
 Future<List<CategoriesModel>> getCategoriesInfo() async {
   try {
     Uri url = Uri.parse('${AppLinks.mainLink}/${AppLinks.categoriesPrefix}');
-    print(url);
+
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {

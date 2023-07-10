@@ -32,6 +32,6 @@ class SubCat {
   });
   SubCat.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json[name];
+    name = json['name'];
   }
 }

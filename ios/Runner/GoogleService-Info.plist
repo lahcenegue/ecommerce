@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>131629533317-12ol38du4bof4g9s3u1dhn4nse9gsako.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.131629533317-12ol38du4bof4g9s3u1dhn4nse9gsako</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>131629533317-du7afi28j4cb86acebcjvnsmk7dk5nq7.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC-qzqSOIH1pJGK_G7gl5VJvSGlHrpB5Ok</string>
+	<key>GCM_SENDER_ID</key>
+	<string>131629533317</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>in.sooq.app</string>
+	<key>PROJECT_ID</key>
+	<string>sooqin</string>
+	<key>STORAGE_BUCKET</key>
+	<string>sooqin.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:131629533317:ios:e3d05a64eb5b9e02fec1ec</string>
+</dict>
+</plist>

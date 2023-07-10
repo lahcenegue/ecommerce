@@ -44,11 +44,81 @@ class _AdsScreenState extends State<AdsScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.all(10),
           width: widthScreen,
           height: heightScreen * 0.09,
           decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(40)),
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Row(
+            children: [
+              Container(
+                height: widthScreen * 0.12,
+                width: widthScreen * 0.12,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 08),
+              Text(
+                'ابو عبد المحسن',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: heightScreen * 0.018,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                height: widthScreen * 0.12,
+                width: widthScreen * 0.12,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.phone,
+                    size: heightScreen * 0.03,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 05),
+              Container(
+                height: widthScreen * 0.12,
+                width: widthScreen * 0.12,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.message,
+                    size: heightScreen * 0.03,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 05),
+              Container(
+                height: widthScreen * 0.12,
+                width: widthScreen * 0.12,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.perm_phone_msg,
+                    size: heightScreen * 0.03,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,

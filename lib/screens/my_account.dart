@@ -1,7 +1,10 @@
+import 'package:ecommerce/screens/favorite_screen.dart';
+import 'package:ecommerce/screens/help_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../core/utils/app_colors.dart';
 import '../core/widgets/costtum_card.dart';
+import 'edit_profil_screen.dart';
 
 class MyAccount extends StatelessWidget {
   const MyAccount({super.key});
@@ -15,27 +18,73 @@ class MyAccount extends StatelessWidget {
       body: Stack(
         children: [
           SizedBox(
-            height: heightScreen,
-            width: widthScreen,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   width: widthScreen,
                   height: heightScreen * 0.3,
-                  padding: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.only(right: 18),
                   color: AppColors.primary,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: widthScreen * 0.15,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfilScreen(),
                         ),
-                      )
-                    ],
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(height: heightScreen * 0.08),
+                        Row(
+                          children: [
+                            Container(
+                              height: heightScreen * 0.08,
+                              width: heightScreen * 0.08,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Column(
+                              children: [
+                                Text(
+                                  'مرام السالمي',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: 08),
+                                Text(
+                                  '+96512345678',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+                  // child: Row(
+                  //   children: [
+                  //     Container(
+                  //       width: widthScreen * 0.15,
+                  //       decoration: const BoxDecoration(
+                  //         shape: BoxShape.circle,
+                  //         color: Colors.green,
+                  //       ),
+                  //     ),
+                  //     Text('data')
+                  //   ],
+                  // ),
+                ),
+                SizedBox(
+                  height: heightScreen * 0.6,
+                  width: widthScreen,
                 ),
               ],
             ),
@@ -70,7 +119,11 @@ class MyAccount extends StatelessWidget {
                       ),
                       title: 'المفضلة',
                       onTap: () {
-                        print('favorite');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FavoriteScreen(),
+                          ),
+                        );
                       },
                     ),
                     //help
@@ -81,7 +134,11 @@ class MyAccount extends StatelessWidget {
                       ),
                       title: 'المساعدة',
                       onTap: () {
-                        print('help');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const HelpScreen(),
+                          ),
+                        );
                       },
                     ),
                     //log out

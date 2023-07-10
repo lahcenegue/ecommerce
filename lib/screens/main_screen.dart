@@ -1,4 +1,5 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/screens/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../ViewModels/categories_viewmodel.dart';
@@ -25,7 +26,6 @@ class MainScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        //backgroundColor: Color(0xfff2f2f2),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -81,7 +81,12 @@ class MainScreen extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  print('notifications');
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const NotificationsScreen(),
+                                    ),
+                                  );
                                 },
                                 icon: const Icon(
                                   Icons.notifications_none_rounded,
@@ -173,7 +178,8 @@ class MainScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   gridDelegate:
                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
+                    crossAxisCount: 2,
+                  ),
                   itemCount: mainData.adsLenght,
                   itemBuilder: (context, index) {
                     return productBox(

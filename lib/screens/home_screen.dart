@@ -5,7 +5,9 @@ import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../core/utils/app_icons.dart';
+import '../core/widgets/constum_button.dart';
 import '../core/widgets/costum_bottom_bar.dart';
+import '../core/widgets/text_form.dart';
 import '../homeViewModel/home_view_model.dart';
 import 'gategories.dart';
 import 'main_screen.dart';
@@ -18,11 +20,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late HomeViewModel hvm;
+  HomeViewModel hvm = HomeViewModel();
+
+  int _currentStep = 0;
 
   @override
   void initState() {
-    hvm = HomeViewModel();
     hvm.fetchMainData();
     hvm.fetchCategories();
     super.initState();
@@ -39,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double heightScreen = MediaQuery.of(context).size.height;
+    double widthScreen = MediaQuery.of(context).size.width;
     hvm.addListener(() {
       setState(() {});
     });
@@ -53,14 +58,84 @@ class _HomeScreenState extends State<HomeScreen> {
           listCategories: hvm.listCategories!,
           mainData: hvm.mainData!,
         ),
-        CategoriesScreen(),
-        MyAnnonces(),
-        MyAccount(),
+        CategoriesScreen(
+          categories: hvm.listCategories!,
+        ),
+        MyAnnonces(
+          urlImages: hvm.listBannerImages!,
+          listCategories: hvm.listCategories!,
+          mainData: hvm.mainData!,
+        ),
+        const MyAccount(),
       ];
       return Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return StatefulBuilder(builder: (context, setState) {
+                      return AlertDialog(
+                        title: const Text(
+                          'اضف اعلان',
+                          textAlign: TextAlign.center,
+                        ),
+                        content: SizedBox(
+                          width: widthScreen,
+                          height: heightScreen * 0.7,
+                          child: Stepper(
+                            currentStep: _currentStep,
+                            type: StepperType.horizontal,
+                            onStepTapped: (int index) {
+                              setState(() {
+                                _currentStep = index;
+                              });
+                            },
+                            onStepContinue: () {
+                              setState(() {
+                                _currentStep += 1;
+                              });
+                            },
+                            onStepCancel: () {
+                              if (_currentStep > 0) {
+                                setState(() {
+                                  _currentStep -= 1;
+                                });
+                              } else {
+                                Navigator.pop(context);
+                              }
+                            },
+                            steps: [
+                              Step(
+                                isActive: _currentStep >= 0,
+                                title: const Text(''),
+                                content: Column(
+                                  children: [
+                                    Text('etape 1 '),
+                                    customTextFormField(
+                                        keyboardType: TextInputType.text,
+                                        prefixIcon: Icons.person,
+                                        hintText: 'اسم الاعلان'),
+                                  ],
+                                ),
+                              ),
+                              Step(
+                                isActive: _currentStep >= 1,
+                                title: const Text(''),
+                                content: Column(
+                                  children: [
+                                    Text('etape 2 '),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  });
+            },
             child: Container(
               padding: const EdgeInsets.all(03),
               decoration: BoxDecoration(
