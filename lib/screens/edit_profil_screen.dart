@@ -1,7 +1,6 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/core/widgets/email_validator.dart';
 import 'package:flutter/material.dart';
-import '../core/widgets/constum_button.dart';
 import '../core/widgets/text_form.dart';
 
 class EditProfilScreen extends StatefulWidget {
@@ -35,27 +34,41 @@ class _EditProfilScreenState extends State<EditProfilScreen> {
                   width: widthScreen,
                   color: AppColors.primary,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: heightScreen * 0.13,
-                        width: heightScreen * 0.13,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        'مرام السالمي',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: heightScreen * 0.03,
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios_rounded,
                           color: Colors.white,
+                          size: heightScreen * 0.05,
                         ),
                       ),
-                      SizedBox(height: heightScreen * 0.1),
+                      SizedBox(height: heightScreen * 0.04),
+                      Center(
+                        child: Container(
+                          height: heightScreen * 0.12,
+                          width: heightScreen * 0.12,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: heightScreen * 0.015),
+                      Center(
+                        child: Text(
+                          'مرام السالمي',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: heightScreen * 0.025,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -7,6 +7,7 @@ import '../ViewModels/main_view_model.dart';
 import '../core/widgets/categories_box.dart';
 import '../core/widgets/banner_slider.dart';
 import '../core/widgets/product_box.dart';
+import 'subcategory_ads.dart';
 
 class MainScreen extends StatelessWidget {
   final List urlImages;
@@ -134,7 +135,16 @@ class MainScreen extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       CategoriesViewModel categorie = listCategories[index];
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => SubCategoryAds(
+                                title: categorie.name!,
+                                id: categorie.id!,
+                              ),
+                            ),
+                          );
+                        },
                         child: categoriesBox(
                           name: categorie.name!,
                         ),

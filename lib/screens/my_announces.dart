@@ -1,10 +1,6 @@
-import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../ViewModels/categories_viewmodel.dart';
 import '../ViewModels/main_view_model.dart';
-import '../core/widgets/categories_box.dart';
-import '../core/widgets/banner_slider.dart';
 import '../core/widgets/product_box.dart';
 
 class MyAnnonces extends StatelessWidget {

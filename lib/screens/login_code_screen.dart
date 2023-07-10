@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/widgets/constum_button.dart';
 import '../firebase/function.dart';
 import 'home_screen.dart';
-import 'main_screen.dart';
 
 class LoginCodeScreen extends StatefulWidget {
   final String phoneNumber;

@@ -97,7 +97,6 @@ class SubCatWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            print(subCat[index].id);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => SubCategoryAds(

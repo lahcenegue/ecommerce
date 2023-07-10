@@ -7,9 +7,7 @@ class SubCategoryViewModel {
 
   List<SubCat>? get subCat {
     List<SubCat> subCatList = [];
-    if (_subcategoruModel.subCat == null) {
-      print('sub cat = null');
-    } else {
+    if (_subcategoruModel.subCat != null) {
       if (_subcategoruModel.subCat!.isNotEmpty) {
         for (int i = 0; i < _subcategoruModel.subCat!.length; i++) {
           subCatList.add(_subcategoruModel.subCat![i]);
