@@ -1,5 +1,6 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/screens/notifications_screen.dart';
+import 'package:ecommerce/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../ViewModels/categories_viewmodel.dart';
@@ -47,7 +48,10 @@ class MainScreen extends StatelessWidget {
                         children: [
                           InkWell(
                             onTap: () {
-                              print('search');
+                              showSearch(
+                                context: context,
+                                delegate: MySearchDelegate(),
+                              );
                             },
                             child: SizedBox(
                               width: widthScreen * 0.8,
