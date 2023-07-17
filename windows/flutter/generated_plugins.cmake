@@ -3,8 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  firebase_core
   flutter_localization
+  permission_handler_windows
   share_plus
   smart_auth
   url_launcher_windows

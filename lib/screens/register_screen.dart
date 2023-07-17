@@ -1,11 +1,20 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/core/widgets/email_validator.dart';
+import 'package:ecommerce/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../core/widgets/constum_button.dart';
 import '../core/widgets/text_form.dart';
+import '../data/api_register.dart';
+import '../models/register_response_model.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  final String phoneNumber;
+  final String code;
+  const RegisterScreen({
+    super.key,
+    required this.phoneNumber,
+    required this.code,
+  });
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -14,11 +23,19 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
 
+  late RegisterRequestModel registerRequestModel;
+
   bool hidePassword1 = true;
   bool hidePassword2 = true;
   bool isApiCallProcess = false;
 
   String? passVerif;
+
+  @override
+  void initState() {
+    registerRequestModel = RegisterRequestModel();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +80,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               width: widthScreen,
+              height: heightScreen * 0.50,
               child: Form(
                 key: globalKey,
-                child: Column(
+                child: ListView(
                   children: [
                     customTextFormField(
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        registerRequestModel.name = value.toString();
+                      },
                       validator: (value) {
                         if (value.toString().isEmpty) {
                           return 'أدخل الاسم';
@@ -83,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //email
                     customTextFormField(
                       onChanged: (value) {
-                        // print(email);
+                        registerRequestModel.email = value.toString();
                       },
                       validator: (value) {
                         if (value.toString().isEmpty) {
@@ -103,6 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //password
                     customTextFormField(
                       onChanged: (value) {
+                        registerRequestModel.password = value.toString();
                         passVerif = value.toString();
                       },
                       validator: (value) {
@@ -165,17 +186,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       title: 'انشاء حساب',
                       topPadding: 40,
                       buttonWidth: widthScreen,
-                      onPressed: () {},
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('لديك حساب؟'),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text('تسجيل الدخول'),
-                        ),
-                      ],
+                      onPressed: () {
+                        if (validateAndSave()) {
+                          setState(() {
+                            isApiCallProcess = true;
+                          });
+                          apiRegister(
+                            phone: widget.phoneNumber,
+                            yourCode: widget.code,
+                            registerRequestModel: registerRequestModel,
+                          ).then((value) async {
+                            setState(() {
+                              isApiCallProcess = false;
+                            });
+
+                            if (value.msg == "ok") {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                              );
+                            }
+                          });
+                        }
+                      },
                     ),
                   ],
                 ),

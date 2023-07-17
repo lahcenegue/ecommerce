@@ -6,4 +6,5 @@ class AppLinks {
   static const String adsPrefix = 'api/v1/ads';
   static const String getAds = 'api/v1/getads';
   static const String search = 'api/v1/search?search';
+  static const String login = 'api/v1/login';
 }

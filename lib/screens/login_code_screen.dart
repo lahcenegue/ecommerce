@@ -1,23 +1,17 @@
-import 'dart:async';
-
 import 'package:ecommerce/core/utils/app_colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecommerce/screens/register_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:pinput/pinput.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../core/widgets/constum_button.dart';
-import '../firebase/function.dart';
+import '../data/api_login_code.dart';
 import 'home_screen.dart';
 
 class LoginCodeScreen extends StatefulWidget {
   final String phoneNumber;
-  final String verificationId;
+
   const LoginCodeScreen({
     super.key,
     required this.phoneNumber,
-    required this.verificationId,
   });
 
   @override
@@ -27,120 +21,13 @@ class LoginCodeScreen extends StatefulWidget {
 class _LoginCodeScreenState extends State<LoginCodeScreen> {
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
 
-  String yourCode = '6677';
-  String smsCode = '';
-
-  bool loading = false;
-  bool resend = false;
-  int count = 20;
+  String? yourCode;
 
   bool isApiCallProcess = false;
-
-  final _auth = FirebaseAuth.instance;
-
-  savePhone(String phone) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('phone', phone);
-  }
-
-  saveName(String name) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('name', name);
-  }
-
-  saveToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', token);
-  }
-
-  //OTP
-  late Timer timer;
-
-  void decompte() {
-    timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (count < 1) {
-        timer.cancel();
-        count = 20;
-        resend = true;
-        setState(() {});
-        return;
-      }
-      count--;
-      setState(() {});
-    });
-  }
-
-  void onResendSmsCode() {
-    resend = false;
-    setState(() {});
-    authWithPhoneNumber(
-      widget.phoneNumber,
-      onCodeSend: (verificationId, v) {
-        loading = false;
-
-        decompte();
-        setState(() {});
-      },
-      onAutoVerify: (v) async {
-        await _auth.signInWithCredential(v);
-      },
-      onFailed: (e) {
-        loading = false;
-        setState(() {});
-        debugPrint("Le code est erroné");
-      },
-      autoRetrieval: (v) {},
-    );
-  }
-
-  void onVerifySmsCode() async {
-    setState(() {
-      loading = true;
-    });
-    await validateOtp(smsCode, widget.verificationId).whenComplete(() {
-      setState(() {
-        loading = true;
-      });
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-    });
-
-    // apiLoginCode(widget.phoneNumber, yourCode).then((value) async {
-    //   setState(() {
-    //     isApiCallProcess = false;
-    //   });
-    //   savePhone(widget.phoneNumber);
-    //   if (value.user == "new") {
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => RegisterScreen(
-    //                 phoneNumber: widget.phoneNumber,
-    //                 code: yourCode,
-    //               )),
-    //     );
-    //   } else if (value.user == "old") {
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => MainScreen(
-    //                 token: value.token!,
-    //               )),
-    //     );
-    //     saveToken(value.token!);
-    //     saveName(value.name!);
-    //   }
-    // });
-
-    debugPrint("Vérification éfectué avec succès");
-  }
 
   @override
   void initState() {
     super.initState();
-    decompte();
   }
 
   @override
@@ -183,7 +70,7 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: heightScreen * 0.1),
+                      SizedBox(height: heightScreen * 0.08),
                     ],
                   ),
                 ),
@@ -244,10 +131,11 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: Pinput(
-                        length: 6,
+                        length: 4,
                         onChanged: (value) {
-                          smsCode = value;
-                          setState(() {});
+                          setState(() {
+                            yourCode = value;
+                          });
                         },
                       ),
                     ),
@@ -258,29 +146,35 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                       buttonWidth: widthScreen,
                       topPadding: 40,
                       onPressed: () {
-                        if (validateAndSave()) {
+                        setState(() {
+                          isApiCallProcess = true;
+                        });
+
+                        apiLoginCode(widget.phoneNumber, yourCode)
+                            .then((value) {
                           setState(() {
-                            isApiCallProcess = true;
+                            isApiCallProcess = false;
                           });
-                          smsCode.length < 6 || loading
-                              ? null
-                              : onVerifySmsCode();
-                        }
+                          if (value.user == "new") {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterScreen(
+                                  phoneNumber: widget.phoneNumber,
+                                  code: yourCode!,
+                                ),
+                              ),
+                            );
+                          } else if (value.user == "old") {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          }
+                        });
                       },
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        onPressed: !resend ? null : onResendSmsCode,
-                        child: Text(
-                          !resend
-                              ? "00:${count.toString().padLeft(2, "0")}"
-                              : "إعادة ارسال الكود",
-                          style: TextStyle(
-                            color: AppColors.secondary,
-                          ),
-                        ),
-                      ),
                     ),
                   ],
                 ),

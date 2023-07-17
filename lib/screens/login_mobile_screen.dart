@@ -1,9 +1,11 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import '../core/widgets/constum_button.dart';
-import '../firebase/function.dart';
+import '../data/api_login_mobile.dart';
+
 import 'login_code_screen.dart';
 
 class LoginMobileScreen extends StatefulWidget {
@@ -17,63 +19,9 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
 
   String phoneNumber = '';
-  String? verification;
+
   bool loading = false;
   bool isApiCallProcess = false;
-
-  void sendOtpCode({required String newPhone}) {
-    loading = true;
-    setState(() {});
-    if (phoneNumber.isNotEmpty) {
-      authWithPhoneNumber(
-        phoneNumber,
-        onCodeSend: (verificationId, v) {
-          loading = false;
-
-          verification = verificationId;
-          setState(() {});
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LoginCodeScreen(
-                phoneNumber: newPhone,
-                verificationId: verification!,
-              ),
-            ),
-          );
-
-          // apiLoginMobile(newPhone).then(
-          //   (value) {
-          //     setState(() {
-          //       isApiCallProcess = false;
-          //     });
-          //     if (value.msg == 'ok') {
-          //       Navigator.pushReplacement(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => LoginCodeScreen(
-          //             phoneNumber: newPhone,
-          //             verificationId: verification!,
-          //           ),
-          //         ),
-          //       );
-          //     }
-          //   },
-          // );
-        },
-        onAutoVerify: (v) async {
-          // await auth
-          //     .signInWithCredential(v)
-          //     .then((value) => Navigator.of(context).pop());
-        },
-        onFailed: (e) {
-          loading = false;
-          setState(() {});
-        },
-        autoRetrieval: (v) {},
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +115,6 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                         decoration: const InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          //contentPadding: EdgeInsets.all(8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(08),
@@ -188,8 +135,21 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                           setState(() {
                             isApiCallProcess = true;
                           });
-
-                          loading ? null : sendOtpCode(newPhone: newphone);
+                          apiLoginMobile(newphone).then((value) {
+                            setState(() {
+                              isApiCallProcess = false;
+                            });
+                            if (value.msg == 'ok') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginCodeScreen(
+                                    phoneNumber: newphone,
+                                  ),
+                                ),
+                              );
+                            }
+                          });
                         }
                       },
                     ),
