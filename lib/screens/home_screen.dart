@@ -1,12 +1,12 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/core/utils/cache_helper.dart';
 import 'package:ecommerce/screens/my_account.dart';
 import 'package:ecommerce/screens/my_announces.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../core/utils/app_icons.dart';
+import '../core/widgets/add_ads_widget.dart';
 import '../core/widgets/costum_bottom_bar.dart';
-import '../core/widgets/text_form.dart';
 import '../homeViewModel/home_view_model.dart';
 import 'gategories.dart';
 import 'main_screen.dart';
@@ -71,69 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
             onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return StatefulBuilder(builder: (context, setState) {
-                      return AlertDialog(
-                        title: const Text(
-                          'اضف اعلان',
-                          textAlign: TextAlign.center,
-                        ),
-                        content: SizedBox(
-                          width: widthScreen,
-                          height: heightScreen * 0.7,
-                          child: Stepper(
-                            currentStep: _currentStep,
-                            type: StepperType.horizontal,
-                            onStepTapped: (int index) {
-                              setState(() {
-                                _currentStep = index;
-                              });
-                            },
-                            onStepContinue: () {
-                              setState(() {
-                                _currentStep += 1;
-                              });
-                            },
-                            onStepCancel: () {
-                              if (_currentStep > 0) {
-                                setState(() {
-                                  _currentStep -= 1;
-                                });
-                              } else {
-                                Navigator.pop(context);
-                              }
-                            },
-                            steps: [
-                              Step(
-                                isActive: _currentStep >= 0,
-                                title: const Text(''),
-                                content: Column(
-                                  children: [
-                                    Text('etape 1 '),
-                                    customTextFormField(
-                                        keyboardType: TextInputType.text,
-                                        prefixIcon: Icons.person,
-                                        hintText: 'اسم الاعلان'),
-                                  ],
-                                ),
-                              ),
-                              Step(
-                                isActive: _currentStep >= 1,
-                                title: const Text(''),
-                                content: Column(
-                                  children: [
-                                    Text('etape 2 '),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+              if (CacheHelper.getData(key: PrefKeys.token) == null) {
+                print('login your account');
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddAdsWidget(
+                        currentStep: _currentStep,
+                        catNames: hvm.catNames,
+                        listCategories: hvm.listCategories!,
                       );
                     });
-                  });
+              }
             },
             child: Container(
               padding: const EdgeInsets.all(03),

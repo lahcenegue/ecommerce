@@ -4,19 +4,13 @@ import 'package:ecommerce/screens/login_mobile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-String? phone;
-String? token;
-String? name;
+import 'core/utils/cache_helper.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // phone = prefs.getString("phone");
-  // token = prefs.getString("token");
-  // name = prefs.getString("name");
-
   checkNotification();
+  await CacheHelper.init();
 
   runApp(const MyApp());
 }
@@ -45,8 +39,9 @@ class MyApp extends StatelessWidget {
           background: const Color(0xfff2f2f2),
         ),
       ),
-      home: const LoginMobileScreen(),
-      //home: const HomeScreen(),
+      home: CacheHelper.getData(key: PrefKeys.token) == null
+          ? const LoginMobileScreen()
+          : const HomeScreen(),
     );
   }
 }

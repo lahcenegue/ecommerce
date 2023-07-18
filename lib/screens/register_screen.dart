@@ -2,6 +2,7 @@ import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/core/widgets/email_validator.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import '../core/utils/cache_helper.dart';
 import '../core/widgets/constum_button.dart';
 import '../core/widgets/text_form.dart';
 import '../data/api_register.dart';
@@ -201,6 +202,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
 
                             if (value.msg == "ok") {
+                              CacheHelper.saveData(
+                                  key: PrefKeys.token, value: value.token);
+                              CacheHelper.saveData(
+                                  key: PrefKeys.name, value: value.name);
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(

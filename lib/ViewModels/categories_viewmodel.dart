@@ -22,4 +22,14 @@ class CategoriesViewModel {
     }
     return subCatList;
   }
+
+  List<String>? get subCatName {
+    List<String> subCatNames = [];
+    if (_categoriesModel.subCat!.isNotEmpty) {
+      for (int i = 0; i < _categoriesModel.subCat!.length; i++) {
+        subCatNames.add(_categoriesModel.subCat![i].name!);
+      }
+    }
+    return subCatNames;
+  }
 }

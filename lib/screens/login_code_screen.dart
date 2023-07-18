@@ -2,6 +2,7 @@ import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import '../core/utils/cache_helper.dart';
 import '../core/widgets/constum_button.dart';
 import '../data/api_login_code.dart';
 import 'home_screen.dart';
@@ -156,21 +157,25 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                             isApiCallProcess = false;
                           });
                           if (value.user == "new") {
-                            Navigator.pushReplacement(
-                              context,
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                 builder: (context) => RegisterScreen(
                                   phoneNumber: widget.phoneNumber,
                                   code: yourCode!,
                                 ),
                               ),
+                              (Route<dynamic> route) => false,
                             );
                           } else if (value.user == "old") {
-                            Navigator.pushReplacement(
-                              context,
+                            CacheHelper.saveData(
+                                key: PrefKeys.token, value: value.token);
+                            CacheHelper.saveData(
+                                key: PrefKeys.name, value: value.name);
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                 builder: (context) => const HomeScreen(),
                               ),
+                              (Route<dynamic> route) => false,
                             );
                           }
                         });

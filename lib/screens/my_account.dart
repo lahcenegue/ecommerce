@@ -1,8 +1,10 @@
 import 'package:ecommerce/screens/favorite_screen.dart';
 import 'package:ecommerce/screens/help_screen.dart';
+import 'package:ecommerce/screens/login_mobile_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../core/utils/app_colors.dart';
+import '../core/utils/cache_helper.dart';
 import '../core/widgets/costtum_card.dart';
 import 'edit_profil_screen.dart';
 
@@ -47,16 +49,18 @@ class MyAccount extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const Column(
+                            Column(
                               children: [
                                 Text(
-                                  'مرام السالمي',
+                                  CacheHelper.getData(key: PrefKeys.name),
                                   style: TextStyle(
                                     color: Colors.white,
+                                    fontSize: heightScreen * 0.03,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 08),
-                                Text(
+                                SizedBox(height: heightScreen * 0.01),
+                                const Text(
                                   '+96512345678',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -69,18 +73,6 @@ class MyAccount extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // child: Row(
-                  //   children: [
-                  //     Container(
-                  //       width: widthScreen * 0.15,
-                  //       decoration: const BoxDecoration(
-                  //         shape: BoxShape.circle,
-                  //         color: Colors.green,
-                  //       ),
-                  //     ),
-                  //     Text('data')
-                  //   ],
-                  // ),
                 ),
                 SizedBox(
                   height: heightScreen * 0.6,
@@ -149,6 +141,13 @@ class MyAccount extends StatelessWidget {
                       ),
                       title: 'تسجيل الخروج',
                       onTap: () {
+                        CacheHelper.removeData(key: PrefKeys.name);
+                        CacheHelper.removeData(key: PrefKeys.token);
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const LoginMobileScreen()),
+                          (Route<dynamic> route) => false,
+                        );
                         print('logout');
                       },
                     ),

@@ -18,6 +18,7 @@ class HomeViewModel extends ChangeNotifier {
   MainViewModel? mainData;
   List<String>? listBannerImages;
   List<CategoriesViewModel>? listCategories;
+  List<String> catNames = [];
   SubCategoryViewModel? listsubCategory;
   AdsViewModel? adsData;
   List<AdsViewModel>? subCatAds;
@@ -38,6 +39,10 @@ class HomeViewModel extends ChangeNotifier {
     List<CategoriesModel> jsonMap = await getCategoriesInfo();
     listCategories =
         jsonMap.map((e) => CategoriesViewModel(categoriesModel: e)).toList();
+
+    for (int i = 0; i < listCategories!.length; i++) {
+      catNames!.add(listCategories![i].name!);
+    }
 
     notifyListeners();
   }
