@@ -40,6 +40,7 @@ Widget productBox({
                   ),
                   child: CachedNetworkImage(
                     imageUrl: image,
+                    fit: BoxFit.cover,
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) => Center(
                       child: CircularProgressIndicator(

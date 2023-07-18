@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 Widget customTextFormField({
+  required String? hintText,
   Function(String)? onChanged,
   String? Function(String?)? validator,
-  required TextInputType? keyboardType,
-  required IconData? prefixIcon,
-  required String? hintText,
+  TextInputType? keyboardType,
+  IconData? prefixIcon,
   int? maxLine,
   Widget? suffixIcon,
   bool obscureText = false,
@@ -15,12 +15,12 @@ Widget customTextFormField({
     child: TextFormField(
       onChanged: onChanged,
       validator: validator,
-      keyboardType: keyboardType,
+      keyboardType: keyboardType ?? TextInputType.text,
       minLines: maxLine ?? 1,
       maxLines: maxLine ?? 1,
       obscureText: obscureText,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.all(8),
+        contentPadding: const EdgeInsets.all(04),
         prefixIcon: Icon(
           prefixIcon,
           color: Colors.black,

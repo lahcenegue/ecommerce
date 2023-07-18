@@ -1,9 +1,7 @@
 import 'package:ecommerce/core/widgets/check_notification.dart';
 import 'package:ecommerce/screens/home_screen.dart';
-import 'package:ecommerce/screens/login_mobile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'core/utils/cache_helper.dart';
 
 main() async {
@@ -39,9 +37,7 @@ class MyApp extends StatelessWidget {
           background: const Color(0xfff2f2f2),
         ),
       ),
-      home: CacheHelper.getData(key: PrefKeys.token) == null
-          ? const LoginMobileScreen()
-          : const HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

@@ -56,36 +56,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: heightScreen * 0.43,
                   width: widthScreen,
                   color: AppColors.primary,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Spacer(),
-                      Text(
-                        'انشاء حساب',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: heightScreen * 0.03,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: heightScreen * 0.1),
-                    ],
-                  ),
                 ),
               ],
             ),
           ),
           Positioned(
-            top: heightScreen * 0.33,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               width: widthScreen,
-              height: heightScreen * 0.50,
+              height: heightScreen,
               child: Form(
                 key: globalKey,
                 child: ListView(
                   children: [
+                    SizedBox(height: heightScreen * 0.23),
+                    Text(
+                      'انشاء حساب',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: heightScreen * 0.03,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: heightScreen * 0.06),
                     customTextFormField(
                       onChanged: (value) {
                         registerRequestModel.name = value.toString();
@@ -217,6 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                       },
                     ),
+                    SizedBox(height: heightScreen * 0.1),
                   ],
                 ),
               ),

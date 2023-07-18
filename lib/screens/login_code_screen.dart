@@ -49,44 +49,42 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                   height: heightScreen * 0.43,
                   width: widthScreen,
                   color: AppColors.primary,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Spacer(),
-                      Text(
-                        'رمز التحقق',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: heightScreen * 0.03,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        'ادخل الارقام التي ارسلت الى رقم هاتفك',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: heightScreen * 0.022,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: heightScreen * 0.08),
-                    ],
-                  ),
                 ),
               ],
             ),
           ),
           Positioned(
-            top: heightScreen * 0.39,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
+              height: heightScreen * 0.8,
               width: widthScreen,
               child: Form(
                 key: globalKey,
-                child: Column(
+                child: ListView(
                   children: [
+                    SizedBox(
+                      height: heightScreen * 0.27,
+                    ),
+                    Text(
+                      'رمز التحقق',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: heightScreen * 0.03,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      'ادخل الارقام التي ارسلت الى رقم هاتفك',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: heightScreen * 0.022,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: heightScreen * 0.07,
+                    ),
                     Container(
                       width: widthScreen,
                       height: heightScreen * 0.1,
@@ -156,30 +154,59 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                           setState(() {
                             isApiCallProcess = false;
                           });
-                          if (value.user == "new") {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => RegisterScreen(
-                                  phoneNumber: widget.phoneNumber,
-                                  code: yourCode!,
+                          if (value.code == null) {
+                            if (value.user == "new") {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterScreen(
+                                    phoneNumber: widget.phoneNumber,
+                                    code: yourCode!,
+                                  ),
                                 ),
-                              ),
-                              (Route<dynamic> route) => false,
-                            );
-                          } else if (value.user == "old") {
-                            CacheHelper.saveData(
-                                key: PrefKeys.token, value: value.token);
-                            CacheHelper.saveData(
-                                key: PrefKeys.name, value: value.name);
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                              (Route<dynamic> route) => false,
+                                (Route<dynamic> route) => false,
+                              );
+                            } else if (value.user == "old") {
+                              CacheHelper.saveData(
+                                  key: PrefKeys.token, value: value.token);
+                              CacheHelper.saveData(
+                                  key: PrefKeys.name, value: value.name);
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                                (Route<dynamic> route) => false,
+                              );
+                            }
+                          } else if (value.code == 'error') {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text(
+                                    'sooq.in',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: const Text(
+                                    'يجب ادخال الكود الصحيح',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('رجوع'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           }
                         });
                       },
+                    ),
+                    SizedBox(
+                      height: heightScreen * 0.12,
                     ),
                   ],
                 ),

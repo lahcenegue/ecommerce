@@ -41,35 +41,34 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   height: heightScreen * 0.43,
                   width: widthScreen,
                   color: AppColors.primary,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Spacer(),
-                      Text(
-                        'ادخل رقم هاتفك لتسجيل الدخول',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: heightScreen * 0.03,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: heightScreen * 0.1),
-                    ],
-                  ),
                 ),
               ],
             ),
           ),
           Positioned(
-            top: heightScreen * 0.39,
+            top: 0,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               width: widthScreen,
+              height: heightScreen,
               child: Form(
                 key: globalKey,
-                child: Column(
+                child: ListView(
                   children: [
+                    SizedBox(
+                      height: heightScreen * 0.25,
+                    ),
+                    Text(
+                      'ادخل رقم هاتفك لتسجيل الدخول',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: heightScreen * 0.03,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: heightScreen * 0.1,
+                    ),
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: IntlPhoneField(

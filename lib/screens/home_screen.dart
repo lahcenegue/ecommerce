@@ -1,11 +1,13 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/core/utils/cache_helper.dart';
+import 'package:ecommerce/screens/add_ads.dart';
+import 'package:ecommerce/screens/login_mobile_screen.dart';
 import 'package:ecommerce/screens/my_account.dart';
 import 'package:ecommerce/screens/my_announces.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import '../core/utils/app_icons.dart';
-import '../core/widgets/add_ads_widget.dart';
+import '../core/widgets/constum_button.dart';
 import '../core/widgets/costum_bottom_bar.dart';
 import '../homeViewModel/home_view_model.dart';
 import 'gategories.dart';
@@ -60,29 +62,101 @@ class _HomeScreenState extends State<HomeScreen> {
         CategoriesScreen(
           categories: hvm.listCategories!,
         ),
-        MyAnnonces(
-          urlImages: hvm.listBannerImages!,
-          listCategories: hvm.listCategories!,
-          mainData: hvm.mainData!,
-        ),
-        const MyAccount(),
+        CacheHelper.getData(key: PrefKeys.token) == null
+            ? Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'الرجاء تسجيل الدخول أولاً للوصول إلى جميع الميزات الموجودة في Sooq.in',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: heightScreen * 0.022),
+                    ),
+                    SizedBox(height: heightScreen * 0.05),
+                    customButton(
+                      buttonWidth: widthScreen,
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginMobileScreen(),
+                            ));
+                      },
+                      title: 'تسجيل الدخول',
+                      topPadding: 08,
+                    ),
+                  ],
+                ),
+              )
+            : MyAnnonces(
+                urlImages: hvm.listBannerImages!,
+                listCategories: hvm.listCategories!,
+                mainData: hvm.mainData!,
+              ),
+        CacheHelper.getData(key: PrefKeys.token) == null
+            ? const LoginMobileScreen()
+            : const MyAccount(),
       ];
       return Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (CacheHelper.getData(key: PrefKeys.token) == null) {
-                print('login your account');
-              } else {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AddAdsWidget(
-                        currentStep: _currentStep,
-                        catNames: hvm.catNames,
-                        listCategories: hvm.listCategories!,
-                      );
-                    });
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text(
+                        'Sooq.in',
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Text(
+                        'الرجاء تسجيل الدخول أولاً للوصول إلى جميع الميزات الموجودة في Sooq.in',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: heightScreen * 0.02),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(08),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginMobileScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'نسجيل الدخول',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('رجوع'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AddAdsScreen(
+                      currentStep: _currentStep,
+                      catNames: hvm.catNames,
+                      listCategories: hvm.listCategories!,
+                    ),
+                  ),
+                );
               }
             },
             child: Container(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter/material.dart';
@@ -73,14 +74,25 @@ Widget buildImage(String urlImage, int index, double height, double width) =>
     Container(
       height: height,
       width: width,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(urlImage),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: const BorderRadius.only(
+      decoration: const BoxDecoration(
+        // image: DecorationImage(
+        //   image: NetworkImage(urlImage),
+        //   fit: BoxFit.cover,
+        // ),
+        borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
+      ),
+      child: CachedNetworkImage(
+        imageUrl: urlImage,
+        fit: BoxFit.cover,
+        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 5,
+            value: downloadProgress.progress,
+          ),
+        ),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );

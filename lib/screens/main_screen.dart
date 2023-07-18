@@ -160,29 +160,15 @@ class MainScreen extends StatelessWidget {
                   vertical: 10,
                   horizontal: 12,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'اخر الاعلانات',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'المزيد',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ))
-                  ],
+                child: const Text(
+                  'اخر الاعلانات',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 18),
               SizedBox(
                 child: MasonryGridView.builder(
                   physics: const BouncingScrollPhysics(),
