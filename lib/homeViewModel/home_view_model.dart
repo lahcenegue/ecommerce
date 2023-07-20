@@ -63,8 +63,8 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   //list Sub Cat Ads
-  Future<void> fetchSubCatAds({required int id}) async {
-    List<AdsModel> jsonMap = await getSubCatAds(id: id);
+  Future<void> fetchSubCatAds({required int id, required int page}) async {
+    List<AdsModel> jsonMap = await getSubCatAds(id: id, page: page);
     subCatAds = jsonMap.map((e) => AdsViewModel(adsModel: e)).toList();
 
     notifyListeners();

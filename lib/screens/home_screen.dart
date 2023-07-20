@@ -12,6 +12,7 @@ import '../core/widgets/costum_bottom_bar.dart';
 import '../homeViewModel/home_view_model.dart';
 import 'gategories.dart';
 import 'main_screen.dart';
+import 'more_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainData: hvm.mainData!,
               ),
         CacheHelper.getData(key: PrefKeys.token) == null
-            ? const LoginMobileScreen()
+            ? const MoreScreen()
             : const MyAccount(),
       ];
       return Scaffold(

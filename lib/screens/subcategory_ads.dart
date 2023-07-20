@@ -2,6 +2,7 @@ import 'package:ecommerce/homeViewModel/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import '../ViewModels/ads_view_model.dart';
 import '../core/utils/app_colors.dart';
 import '../core/widgets/product_box.dart';
 
@@ -120,10 +121,26 @@ class SubCatAds extends StatefulWidget {
 class _SubCatAdsState extends State<SubCatAds> {
   HomeViewModel hvm = HomeViewModel();
 
+  final controller = ScrollController();
+  bool isLoadingMore = false;
+  int page = 1;
+
+  List<AdsViewModel> listAds = [];
+
   @override
   void initState() {
-    hvm.fetchSubCatAds(id: widget.id);
+    controller.addListener(_scrollListener);
+    hvm.fetchSubCatAds(
+      id: widget.id,
+      page: page,
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -144,7 +161,9 @@ class _SubCatAdsState extends State<SubCatAds> {
         child: CircularProgressIndicator(),
       );
     } else {
+      listAds = listAds + hvm.subCatAds!;
       return MasonryGridView.builder(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
         mainAxisSpacing: 32,
         crossAxisSpacing: 18,
@@ -153,20 +172,56 @@ class _SubCatAdsState extends State<SubCatAds> {
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
         ),
-        itemCount: hvm.subCatAds!.length,
+        itemCount: isLoadingMore ? listAds.length + 1 : listAds.length,
         itemBuilder: (context, index) {
-          return productBox(
-            widthSceeren: widthScreen,
-            id: hvm.subCatAds![index].id!,
-            image: hvm.subCatAds![index].images![0],
-            title: hvm.subCatAds![index].title!,
-            desc: hvm.subCatAds![index].desc!,
-            price: hvm.subCatAds![index].price!,
-            created: hvm.subCatAds![index].created!,
-            userId: hvm.subCatAds![index].userId!,
-          );
+          if (index < listAds.length) {
+            return productBox(
+              widthSceeren: widthScreen,
+              id: listAds[index].id!,
+              image: listAds[index].images![0],
+              title: listAds[index].title!,
+              desc: listAds[index].desc!,
+              price: listAds[index].price!,
+              created: listAds[index].created!,
+              userId: listAds[index].userId!,
+            );
+          } else {
+            return const Row(
+              children: [
+                Spacer(),
+                CircularProgressIndicator(),
+              ],
+            );
+          }
         },
       );
+    }
+  }
+
+  Future<void> _scrollListener() async {
+    if (isLoadingMore) return;
+    if (controller.position.pixels == controller.position.maxScrollExtent) {
+      setState(() {
+        isLoadingMore = true;
+      });
+      await Future.delayed(const Duration(seconds: 2)).then((value) async {
+        setState(() {
+          page = page + 1;
+        });
+
+        await hvm
+            .fetchSubCatAds(
+          id: widget.id,
+          page: page,
+        )
+            .then((value) {
+          setState(
+            () {
+              isLoadingMore = false;
+            },
+          );
+        });
+      });
     }
   }
 }

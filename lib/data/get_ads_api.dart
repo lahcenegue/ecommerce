@@ -3,9 +3,11 @@ import 'package:ecommerce/models/ads_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-Future<List<AdsModel>> getSubCatAds({required int id}) async {
+Future<List<AdsModel>> getSubCatAds(
+    {required int id, required int page}) async {
   try {
-    Uri url = Uri.parse('${AppLinks.mainLink}/${AppLinks.getAds}/$id');
+    Uri url = Uri.parse('${AppLinks.mainLink}/${AppLinks.getAds}/$id/$page');
+    print(url);
 
     http.Response response = await http.get(url);
 

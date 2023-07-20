@@ -48,16 +48,9 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
   Widget build(BuildContext context) {
     double heightScreen = MediaQuery.of(context).size.height;
     double widthScreen = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'اضف اعلان',
-          textAlign: TextAlign.center,
-        ),
-        leading: IconButton(
-          onPressed: () {
-            showDialog(
+    return WillPopScope(
+      onWillPop: () async {
+        return await showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
@@ -79,7 +72,7 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(false);
                       },
                       child: const Text(
                         'إكمال',
@@ -88,179 +81,183 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(true);
                       },
                       child: const Text('تأكيد الرجوع'),
                     ),
                   ],
                 );
               },
-            );
-          },
-          icon: const Icon(
-            Icons.arrow_back,
+            ) ??
+            false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'اضف اعلان',
+            textAlign: TextAlign.center,
           ),
         ),
-      ),
-      body: Stepper(
-        currentStep: widget.currentStep,
-        type: StepperType.horizontal,
-        onStepTapped: (int index) {
-          setState(() {
-            widget.currentStep = index;
-          });
-        },
-        onStepContinue: () {
-          setState(() {
-            widget.currentStep += 1;
-          });
-        },
-        onStepCancel: () {
-          if (widget.currentStep > 0) {
+        body: Stepper(
+          currentStep: widget.currentStep,
+          type: StepperType.horizontal,
+          onStepTapped: (int index) {
             setState(() {
-              widget.currentStep -= 1;
+              widget.currentStep = index;
             });
-          } else {
-            Navigator.pop(context);
-          }
-        },
-        steps: [
-          Step(
-            isActive: widget.currentStep >= 0,
-            title: const Text(''),
-            content: Column(
-              children: [
-                // category
-                SizedBox(
-                  height: heightScreen * 0.072,
-                  child: DropdownSearch(
-                    items: widget.catNames,
-                    selectedItem: category,
-                    onChanged: (value) {
-                      setState(() {
-                        category = value;
-                        catPosition = widget.catNames.indexOf(category);
-                      });
-                    },
-                    popupProps: const PopupProps.menu(
-                      showSearchBox: true,
-                      scrollbarProps: ScrollbarProps(),
-                    ),
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: "الأقسام",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(08),
+          },
+          onStepContinue: () {
+            setState(() {
+              widget.currentStep += 1;
+            });
+          },
+          onStepCancel: () {
+            if (widget.currentStep > 0) {
+              setState(() {
+                widget.currentStep -= 1;
+              });
+            } else {
+              Navigator.pop(context);
+            }
+          },
+          steps: [
+            Step(
+              isActive: widget.currentStep >= 0,
+              title: const Text(''),
+              content: Column(
+                children: [
+                  // category
+                  SizedBox(
+                    height: heightScreen * 0.072,
+                    child: DropdownSearch(
+                      items: widget.catNames,
+                      selectedItem: category,
+                      onChanged: (value) {
+                        setState(() {
+                          category = value;
+                          catPosition = widget.catNames.indexOf(category);
+                        });
+                      },
+                      popupProps: const PopupProps.menu(
+                        showSearchBox: true,
+                        scrollbarProps: ScrollbarProps(),
+                      ),
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "الأقسام",
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(08),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: heightScreen * 0.022),
+                  SizedBox(height: heightScreen * 0.022),
 
-                // sub category
-                SizedBox(
-                  height: heightScreen * 0.072,
-                  child: DropdownSearch(
-                    items: widget.listCategories[catPosition].subCatName,
-                    selectedItem: subCat,
-                    enabled: category == null ? false : true,
-                    onChanged: (value) {
-                      setState(() {
-                        subCat = value;
-                      });
-                    },
-                    popupProps: const PopupProps.menu(
-                      showSearchBox: true,
-                      scrollbarProps: ScrollbarProps(),
-                    ),
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: "الأقسام الفرعية",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(08),
+                  // sub category
+                  SizedBox(
+                    height: heightScreen * 0.072,
+                    child: DropdownSearch(
+                      items: widget.listCategories[catPosition].subCatName,
+                      selectedItem: subCat,
+                      enabled: category == null ? false : true,
+                      onChanged: (value) {
+                        setState(() {
+                          subCat = value;
+                        });
+                      },
+                      popupProps: const PopupProps.menu(
+                        showSearchBox: true,
+                        scrollbarProps: ScrollbarProps(),
+                      ),
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "الأقسام الفرعية",
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(08),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                // title
-                //SizedBox(height: heightScreen * 0.02),
+                  // title
+                  //SizedBox(height: heightScreen * 0.02),
 
-                customTextFormField(hintText: 'العنوان'),
+                  customTextFormField(hintText: 'العنوان'),
 
-                //price
+                  //price
 
-                customTextFormField(
-                  hintText: 'الثمن',
-                  keyboardType: TextInputType.number,
-                ),
+                  customTextFormField(
+                    hintText: 'الثمن',
+                    keyboardType: TextInputType.number,
+                  ),
 
-                //descreption
+                  //descreption
 
-                customTextFormField(
-                  hintText: 'الوصف',
-                  keyboardType: TextInputType.text,
-                  maxLine: 5,
-                ),
-              ],
+                  customTextFormField(
+                    hintText: 'الوصف',
+                    keyboardType: TextInputType.text,
+                    maxLine: 5,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Step(
-            isActive: widget.currentStep >= 1,
-            title: const Text(''),
-            content: Column(
-              children: [
-                Container(
-                  height: image == null ? 0 : heightScreen * 0.4,
-                  width: widthScreen,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(08),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1,
+            Step(
+              isActive: widget.currentStep >= 1,
+              title: const Text(''),
+              content: Column(
+                children: [
+                  Container(
+                    height: image == null ? 0 : heightScreen * 0.4,
+                    width: widthScreen,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(08),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1,
+                      ),
+                    ),
+                    child: image == null
+                        ? const SizedBox()
+                        : Image.file(
+                            image!,
+                            width: widthScreen,
+                            height: heightScreen * 0.4,
+                          ),
+                  ),
+                  SizedBox(height: heightScreen * 0.03),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(heightScreen * 0.072),
+                      backgroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      pickImage();
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Icon(Icons.photo_size_select_actual_rounded),
+                        Text('حمل الصورة'),
+                      ],
                     ),
                   ),
-                  child: image == null
-                      ? const SizedBox()
-                      : Image.file(
-                          image!,
-                          width: widthScreen,
-                          height: heightScreen * 0.4,
-                        ),
-                ),
-                SizedBox(height: heightScreen * 0.03),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size.fromHeight(heightScreen * 0.072),
-                    backgroundColor: Colors.white,
-                  ),
-                  onPressed: () {
-                    pickImage();
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Icon(Icons.photo_size_select_actual_rounded),
-                      Text('حمل الصورة'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
