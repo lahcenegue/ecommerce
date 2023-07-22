@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:ecommerce/core/widgets/text_form.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,11 +25,14 @@ class AddAdsScreen extends StatefulWidget {
 }
 
 class _AddAdsScreenState extends State<AddAdsScreen> {
+  //final ScaffoldMessengerState _scaffold =
+
   String? category;
   String? subCat;
   int catPosition = 0;
 
-  File? image;
+  File? mainImage;
+  List<File> selectedImages = [];
 
   Future pickImage() async {
     try {
@@ -38,9 +42,29 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
 
       final imageTemporary = File(image.path);
 
-      setState(() => this.image = imageTemporary);
+      setState(() => mainImage = imageTemporary);
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
+    }
+  }
+
+  Future getImages() async {
+    final pickedFile = await ImagePicker().pickMultiImage();
+    List<XFile> xfilePick = pickedFile;
+
+    if (xfilePick.isNotEmpty) {
+      for (var i = 0; i < xfilePick.length; i++) {
+        selectedImages.add(File(xfilePick[i].path));
+      }
+      setState(() {});
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('لم يتم اختيار الصور'),
+          ),
+        );
+      }
     }
   }
 
@@ -108,9 +132,11 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
             });
           },
           onStepContinue: () {
-            setState(() {
-              widget.currentStep += 1;
-            });
+            if (widget.currentStep < 2) {
+              setState(() {
+                widget.currentStep += 1;
+              });
+            }
           },
           onStepCancel: () {
             if (widget.currentStep > 0) {
@@ -217,21 +243,17 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
               title: const Text(''),
               content: Column(
                 children: [
-                  Container(
-                    height: image == null ? 0 : heightScreen * 0.4,
+                  SizedBox(
+                    height: mainImage == null
+                        ? heightScreen * 0.1
+                        : heightScreen * 0.26,
                     width: widthScreen,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(08),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 1,
-                      ),
-                    ),
-                    child: image == null
-                        ? const SizedBox()
+                    child: mainImage == null
+                        ? const Center(
+                            child: Text('لم تحمل الصورة الرئسية بعد'),
+                          )
                         : Image.file(
-                            image!,
+                            mainImage!,
                             width: widthScreen,
                             height: heightScreen * 0.4,
                           ),
@@ -245,14 +267,80 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
                     onPressed: () {
                       pickImage();
                     },
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Icon(Icons.photo_size_select_actual_rounded),
-                        Text('حمل الصورة'),
+                        const Icon(Icons.photo_size_select_actual_rounded),
+                        Text(
+                          'حمل الصورة الرئيسية',
+                          style: TextStyle(
+                            fontSize: heightScreen * 0.025,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
                   ),
+                  SizedBox(height: heightScreen * 0.05),
+
+                  // picturs
+                  SizedBox(
+                    height: selectedImages.isEmpty
+                        ? heightScreen * 0.1
+                        : selectedImages.length <= 2
+                            ? heightScreen * 0.23
+                            : heightScreen * 0.43,
+                    width: widthScreen,
+                    child: selectedImages.isEmpty
+                        ? const Center(
+                            child: Text('لم تحمل الصور بعد'),
+                          )
+                        : GridView.builder(
+                            itemCount: selectedImages.length,
+                            padding: const EdgeInsets.all(08),
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 08,
+                            ),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Center(
+                                  child: Image.file(selectedImages[index]));
+                            },
+                          ),
+                  ),
+                  SizedBox(height: heightScreen * 0.03),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(heightScreen * 0.072),
+                      backgroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      if (selectedImages.length < 4) {
+                        getImages();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('لا يمكن تحميل اكثر من 4 صور')));
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const Icon(Icons.photo_size_select_actual_rounded),
+                        Text(
+                          'حمل الصور',
+                          style: TextStyle(
+                            fontSize: heightScreen * 0.025,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: heightScreen * 0.04),
                 ],
               ),
             )
