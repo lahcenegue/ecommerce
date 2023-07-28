@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../ViewModels/subcat_view_model.dart';
 import '../data/categories_api.dart';
 import '../data/main_api.dart';
+import '../data/my_ads_api.dart';
 import '../models/ads_model.dart';
 import '../models/categories_model.dart';
 import '../models/main_model.dart';
@@ -22,6 +23,7 @@ class HomeViewModel extends ChangeNotifier {
   SubCategoryViewModel? listsubCategory;
   AdsViewModel? adsData;
   List<AdsViewModel>? subCatAds;
+  List<AdsViewModel>? myAds;
 
 //functions
   // list Banner Images
@@ -41,7 +43,7 @@ class HomeViewModel extends ChangeNotifier {
         jsonMap.map((e) => CategoriesViewModel(categoriesModel: e)).toList();
 
     for (int i = 0; i < listCategories!.length; i++) {
-      catNames!.add(listCategories![i].name!);
+      catNames.add(listCategories![i].name!);
     }
 
     notifyListeners();
@@ -66,6 +68,14 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> fetchSubCatAds({required int id, required int page}) async {
     List<AdsModel> jsonMap = await getSubCatAds(id: id, page: page);
     subCatAds = jsonMap.map((e) => AdsViewModel(adsModel: e)).toList();
+
+    notifyListeners();
+  }
+
+  //list of my Ads
+  Future<void> fetchmyAds({required String token, required int page}) async {
+    List<AdsModel> jsonMap = await myAdsApi(token: token, page: page);
+    myAds = jsonMap.map((e) => AdsViewModel(adsModel: e)).toList();
 
     notifyListeners();
   }

@@ -24,12 +24,22 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   HomeViewModel hvm = HomeViewModel();
 
-  int _currentStep = 0;
+  int page = 1;
+
+  late String token;
 
   @override
   void initState() {
+    if (CacheHelper.getData(key: PrefKeys.token) != null) {
+      token = CacheHelper.getData(key: PrefKeys.token);
+      hvm.fetchmyAds(
+        token: token,
+        page: page,
+      );
+    }
     hvm.fetchMainData();
     hvm.fetchCategories();
+
     super.initState();
   }
 
@@ -91,8 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
             : MyAnnonces(
-                urlImages: hvm.listBannerImages!,
-                listCategories: hvm.listCategories!,
                 mainData: hvm.mainData!,
               ),
         CacheHelper.getData(key: PrefKeys.token) == null
@@ -152,7 +160,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => AddAdsScreen(
-                      currentStep: _currentStep,
                       catNames: hvm.catNames,
                       listCategories: hvm.listCategories!,
                     ),

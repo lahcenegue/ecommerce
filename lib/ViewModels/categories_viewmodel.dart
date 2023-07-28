@@ -32,4 +32,14 @@ class CategoriesViewModel {
     }
     return subCatNames;
   }
+
+  List<int>? get subCatId {
+    List<int> subCatId = [];
+    if (_categoriesModel.subCat!.isNotEmpty) {
+      for (int i = 0; i < _categoriesModel.subCat!.length; i++) {
+        subCatId.add(_categoriesModel.subCat![i].id!);
+      }
+    }
+    return subCatId;
+  }
 }

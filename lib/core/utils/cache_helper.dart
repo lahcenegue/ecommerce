@@ -14,7 +14,6 @@ class CacheHelper {
   static dynamic getData({
     required String key,
   }) {
-    print('getdata');
     return sharedPreferences!.get(key);
   }
 

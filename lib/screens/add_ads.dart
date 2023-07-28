@@ -1,21 +1,22 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:ecommerce/core/utils/cache_helper.dart';
 import 'package:ecommerce/core/widgets/text_form.dart';
-import 'package:flutter/foundation.dart';
+import 'package:ecommerce/data/add_ads_api.dart';
+import 'package:ecommerce/models/add_ads.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'dart:convert';
 import '../core/utils/app_colors.dart';
+import 'home_screen.dart';
 
 class AddAdsScreen extends StatefulWidget {
-  int currentStep;
   final List catNames;
   final List listCategories;
 
-  AddAdsScreen({
+  const AddAdsScreen({
     super.key,
-    required this.currentStep,
     required this.catNames,
     required this.listCategories,
   });
@@ -25,27 +26,419 @@ class AddAdsScreen extends StatefulWidget {
 }
 
 class _AddAdsScreenState extends State<AddAdsScreen> {
-  //final ScaffoldMessengerState _scaffold =
+  GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+  late AddAdsRequest addAdsRequest;
 
   String? category;
-  String? subCat;
+  String? subCatName;
+  int? subCatId;
   int catPosition = 0;
+  int subCatPosition = 0;
+  int mainImage = 0;
+  String mainImageBase64 = '';
 
-  File? mainImage;
+  int _currentStep = 0;
+
+  bool isApiCallProcess = false;
+
+  @override
+  void initState() {
+    addAdsRequest = AddAdsRequest();
+    addAdsRequest.token = CacheHelper.getData(key: PrefKeys.token);
+    super.initState();
+  }
+
   List<File> selectedImages = [];
 
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  @override
+  Widget build(BuildContext context) {
+    double heightScreen = MediaQuery.of(context).size.height;
+    double widthScreen = MediaQuery.of(context).size.width;
 
-      if (image == null) return;
+    return Stack(
+      children: [
+        WillPopScope(
+          onWillPop: () async {
+            return await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text(
+                        'Sooq.in',
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Text(
+                        'هل تريد تأكيد الرجوع؟',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: heightScreen * 0.02),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(08),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                          child: const Text(
+                            'إكمال',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          },
+                          child: const Text('تأكيد الرجوع'),
+                        ),
+                      ],
+                    );
+                  },
+                ) ??
+                false;
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: const Text(
+                'اضف اعلان',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            body: Stepper(
+              type: StepperType.horizontal,
 
-      final imageTemporary = File(image.path);
+              // on Tapped
+              onStepTapped: (int index) {
+                setState(() {
+                  _currentStep = index;
+                });
+              },
 
-      setState(() => mainImage = imageTemporary);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
+              // current Step
+              currentStep: _currentStep,
+
+              // cantinue
+              onStepContinue: () async {
+                if (_currentStep < 1) {
+                  if ((addAdsRequest.name != null) &&
+                      (addAdsRequest.amount != null) &&
+                      (addAdsRequest.comment != null) &&
+                      (addAdsRequest.catid != null)) {
+                    setState(() {
+                      _currentStep += 1;
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('يحب ملء جميع المعلومات'),
+                      ),
+                    );
+                  }
+                } else {
+                  if (mainImageBase64.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('يجب اختيار الصور'),
+                      ),
+                    );
+                  } else {
+                    if (validateAndSave()) {
+                      setState(() {
+                        isApiCallProcess = true;
+                      });
+                      await addAdsApi(addAdsRequest: addAdsRequest)
+                          .then((value) {
+                        setState(() {
+                          isApiCallProcess = false;
+                        });
+                        if (value.msg == 'ok') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        }
+                      });
+                    }
+                  }
+                }
+              },
+              onStepCancel: () {
+                if (_currentStep > 0) {
+                  setState(() {
+                    _currentStep -= 1;
+                  });
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              steps: [
+                Step(
+                  isActive: _currentStep >= 0,
+                  title: const Text(''),
+                  content: Form(
+                    key: globalKey,
+                    child: Column(
+                      children: [
+                        // category
+                        SizedBox(
+                          height: heightScreen * 0.072,
+                          child: DropdownSearch(
+                            items: widget.catNames,
+                            selectedItem: category,
+                            onChanged: (value) {
+                              setState(() {
+                                category = value;
+                                catPosition = widget.catNames.indexOf(category);
+                              });
+                            },
+                            popupProps: const PopupProps.menu(
+                              showSearchBox: true,
+                              scrollbarProps: ScrollbarProps(),
+                            ),
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                labelText: "الأقسام",
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(08),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: heightScreen * 0.022),
+
+                        // sub category
+                        SizedBox(
+                          height: heightScreen * 0.072,
+                          child: DropdownSearch(
+                            items:
+                                widget.listCategories[catPosition].subCatName,
+                            selectedItem: subCatName,
+                            enabled: category == null ? false : true,
+                            onChanged: (value) {
+                              setState(() {
+                                subCatName = value.toString();
+                                subCatPosition = widget
+                                    .listCategories[catPosition].subCatName
+                                    .indexOf(subCatName);
+                                subCatId = widget.listCategories[catPosition]
+                                    .subCatId[subCatPosition];
+                                addAdsRequest.catid = subCatId.toString();
+                              });
+                            },
+                            popupProps: const PopupProps.menu(
+                              showSearchBox: true,
+                              scrollbarProps: ScrollbarProps(),
+                            ),
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                labelText: "الأقسام الفرعية",
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(08),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // title
+                        //SizedBox(height: heightScreen * 0.02),
+
+                        customTextFormField(
+                          hintText: 'العنوان',
+                          onChanged: (value) {
+                            addAdsRequest.name = value;
+                          },
+                        ),
+
+                        //price
+
+                        customTextFormField(
+                          hintText: 'الثمن',
+                          onChanged: (value) {
+                            addAdsRequest.amount = value;
+                          },
+                          keyboardType: TextInputType.number,
+                        ),
+
+                        //descreption
+
+                        customTextFormField(
+                          hintText: 'الوصف',
+                          onChanged: (value) {
+                            addAdsRequest.comment = value;
+                          },
+                          keyboardType: TextInputType.text,
+                          maxLine: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Step(
+                  isActive: _currentStep >= 1,
+                  title: const Text(''),
+                  content: Column(
+                    children: [
+                      // picturs
+                      SizedBox(
+                        height: selectedImages.isEmpty
+                            ? heightScreen * 0.2
+                            : heightScreen * 0.43,
+                        width: widthScreen,
+                        child: selectedImages.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'لم تحمل الصور بعد',
+                                  style: TextStyle(
+                                    fontSize: heightScreen * 0.025,
+                                  ),
+                                ),
+                              )
+                            : ListView.separated(
+                                padding: const EdgeInsets.all(12),
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: selectedImages.length,
+                                separatorBuilder: (context, index) => SizedBox(
+                                  width: heightScreen * 0.05,
+                                ),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return SizedBox(
+                                    height: heightScreen * 0.4,
+                                    width: widthScreen * 0.6,
+                                    child: Stack(
+                                      children: [
+                                        Image.file(
+                                          selectedImages[index],
+                                          height: heightScreen * 0.4,
+                                          width: widthScreen * 0.6,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Positioned(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              selectedImages.removeAt(index);
+
+                                              setState(() {
+                                                selectedImages;
+                                              });
+                                            },
+                                            icon: Icon(
+                                              Icons.remove_circle,
+                                              color: Colors.red,
+                                              size: heightScreen * 0.04,
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: 0,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                mainImage = index;
+                                                Uint8List imagebytes =
+                                                    selectedImages[mainImage]
+                                                        .readAsBytesSync();
+
+                                                mainImageBase64 =
+                                                    base64Encode(imagebytes);
+                                              });
+
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                      'تم اختيار الصورة ${index + 1} كصورة رئيسية'),
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.check_circle,
+                                              color: mainImage == index
+                                                  ? Colors.green
+                                                  : Colors.blue,
+                                              size: heightScreen * 0.04,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                      ),
+                      SizedBox(height: heightScreen * 0.02),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size.fromHeight(heightScreen * 0.072),
+                          backgroundColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          if (selectedImages.length < 4) {
+                            getImages();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text('لا يمكن تحميل اكثر من 4 صور')));
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Icon(Icons.photo_size_select_actual_rounded),
+                            Text(
+                              'حمل الصور',
+                              style: TextStyle(
+                                fontSize: heightScreen * 0.025,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: heightScreen * 0.04),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Visibility(
+          visible: isApiCallProcess ? true : false,
+          child: Stack(
+            children: [
+              ModalBarrier(
+                color: Colors.white.withOpacity(0.6),
+                dismissible: true,
+              ),
+              const Center(
+                child: CircularProgressIndicator(),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Future getImages() async {
@@ -56,7 +449,12 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
       for (var i = 0; i < xfilePick.length; i++) {
         selectedImages.add(File(xfilePick[i].path));
       }
-      setState(() {});
+      setState(() {
+        Uint8List imagebytes = selectedImages[mainImage].readAsBytesSync();
+
+        mainImageBase64 = base64Encode(imagebytes);
+        addAdsRequest.image = mainImageBase64;
+      });
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -68,285 +466,12 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double heightScreen = MediaQuery.of(context).size.height;
-    double widthScreen = MediaQuery.of(context).size.width;
-    return WillPopScope(
-      onWillPop: () async {
-        return await showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text(
-                    'Sooq.in',
-                    textAlign: TextAlign.center,
-                  ),
-                  content: Text(
-                    'هل تريد تأكيد الرجوع؟',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: heightScreen * 0.02),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(08),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                      child: const Text(
-                        'إكمال',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: const Text('تأكيد الرجوع'),
-                    ),
-                  ],
-                );
-              },
-            ) ??
-            false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            'اضف اعلان',
-            textAlign: TextAlign.center,
-          ),
-        ),
-        body: Stepper(
-          currentStep: widget.currentStep,
-          type: StepperType.horizontal,
-          onStepTapped: (int index) {
-            setState(() {
-              widget.currentStep = index;
-            });
-          },
-          onStepContinue: () {
-            if (widget.currentStep < 2) {
-              setState(() {
-                widget.currentStep += 1;
-              });
-            }
-          },
-          onStepCancel: () {
-            if (widget.currentStep > 0) {
-              setState(() {
-                widget.currentStep -= 1;
-              });
-            } else {
-              Navigator.pop(context);
-            }
-          },
-          steps: [
-            Step(
-              isActive: widget.currentStep >= 0,
-              title: const Text(''),
-              content: Column(
-                children: [
-                  // category
-                  SizedBox(
-                    height: heightScreen * 0.072,
-                    child: DropdownSearch(
-                      items: widget.catNames,
-                      selectedItem: category,
-                      onChanged: (value) {
-                        setState(() {
-                          category = value;
-                          catPosition = widget.catNames.indexOf(category);
-                        });
-                      },
-                      popupProps: const PopupProps.menu(
-                        showSearchBox: true,
-                        scrollbarProps: ScrollbarProps(),
-                      ),
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: "الأقسام",
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(08),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: heightScreen * 0.022),
-
-                  // sub category
-                  SizedBox(
-                    height: heightScreen * 0.072,
-                    child: DropdownSearch(
-                      items: widget.listCategories[catPosition].subCatName,
-                      selectedItem: subCat,
-                      enabled: category == null ? false : true,
-                      onChanged: (value) {
-                        setState(() {
-                          subCat = value;
-                        });
-                      },
-                      popupProps: const PopupProps.menu(
-                        showSearchBox: true,
-                        scrollbarProps: ScrollbarProps(),
-                      ),
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: "الأقسام الفرعية",
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(08),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // title
-                  //SizedBox(height: heightScreen * 0.02),
-
-                  customTextFormField(hintText: 'العنوان'),
-
-                  //price
-
-                  customTextFormField(
-                    hintText: 'الثمن',
-                    keyboardType: TextInputType.number,
-                  ),
-
-                  //descreption
-
-                  customTextFormField(
-                    hintText: 'الوصف',
-                    keyboardType: TextInputType.text,
-                    maxLine: 5,
-                  ),
-                ],
-              ),
-            ),
-            Step(
-              isActive: widget.currentStep >= 1,
-              title: const Text(''),
-              content: Column(
-                children: [
-                  SizedBox(
-                    height: mainImage == null
-                        ? heightScreen * 0.1
-                        : heightScreen * 0.26,
-                    width: widthScreen,
-                    child: mainImage == null
-                        ? const Center(
-                            child: Text('لم تحمل الصورة الرئسية بعد'),
-                          )
-                        : Image.file(
-                            mainImage!,
-                            width: widthScreen,
-                            height: heightScreen * 0.4,
-                          ),
-                  ),
-                  SizedBox(height: heightScreen * 0.03),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size.fromHeight(heightScreen * 0.072),
-                      backgroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      pickImage();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Icon(Icons.photo_size_select_actual_rounded),
-                        Text(
-                          'حمل الصورة الرئيسية',
-                          style: TextStyle(
-                            fontSize: heightScreen * 0.025,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: heightScreen * 0.05),
-
-                  // picturs
-                  SizedBox(
-                    height: selectedImages.isEmpty
-                        ? heightScreen * 0.1
-                        : selectedImages.length <= 2
-                            ? heightScreen * 0.23
-                            : heightScreen * 0.43,
-                    width: widthScreen,
-                    child: selectedImages.isEmpty
-                        ? const Center(
-                            child: Text('لم تحمل الصور بعد'),
-                          )
-                        : GridView.builder(
-                            itemCount: selectedImages.length,
-                            padding: const EdgeInsets.all(08),
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 08,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return Center(
-                                  child: Image.file(selectedImages[index]));
-                            },
-                          ),
-                  ),
-                  SizedBox(height: heightScreen * 0.03),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size.fromHeight(heightScreen * 0.072),
-                      backgroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      if (selectedImages.length < 4) {
-                        getImages();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('لا يمكن تحميل اكثر من 4 صور')));
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Icon(Icons.photo_size_select_actual_rounded),
-                        Text(
-                          'حمل الصور',
-                          style: TextStyle(
-                            fontSize: heightScreen * 0.025,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: heightScreen * 0.04),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+  bool validateAndSave() {
+    final FormState? form = globalKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
   }
 }

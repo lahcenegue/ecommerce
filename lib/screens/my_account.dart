@@ -1,9 +1,7 @@
 import 'package:ecommerce/screens/favorite_screen.dart';
 import 'package:ecommerce/screens/help_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
-import 'package:ecommerce/screens/login_mobile_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../core/utils/app_colors.dart';
 import '../core/utils/cache_helper.dart';
 import '../core/widgets/costtum_card.dart';
@@ -149,7 +147,6 @@ class MyAccount extends StatelessWidget {
                               builder: (context) => const HomeScreen()),
                           (Route<dynamic> route) => false,
                         );
-                        print('logout');
                       },
                     ),
                   ],

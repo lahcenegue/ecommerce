@@ -75,24 +75,23 @@ Widget buildImage(String urlImage, int index, double height, double width) =>
       height: height,
       width: width,
       decoration: const BoxDecoration(
-        // image: DecorationImage(
-        //   image: NetworkImage(urlImage),
-        //   fit: BoxFit.cover,
-        // ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
       ),
-      child: CachedNetworkImage(
-        imageUrl: urlImage,
-        fit: BoxFit.cover,
-        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 5,
-            value: downloadProgress.progress,
-          ),
-        ),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-      ),
+      child: urlImage.isEmpty
+          ? const Icon(Icons.error)
+          : CachedNetworkImage(
+              imageUrl: urlImage,
+              fit: BoxFit.cover,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 5,
+                  value: downloadProgress.progress,
+                ),
+              ),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ),
     );
