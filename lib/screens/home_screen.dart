@@ -10,7 +10,7 @@ import '../core/utils/app_icons.dart';
 import '../core/widgets/constum_button.dart';
 import '../core/widgets/costum_bottom_bar.dart';
 import '../homeViewModel/home_view_model.dart';
-import 'gategories.dart';
+import 'categories.dart';
 import 'main_screen.dart';
 import 'more_screen.dart';
 

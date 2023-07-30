@@ -9,4 +9,5 @@ class AppLinks {
   static const String login = 'api/v1/login';
   static const String addAds = 'api/v1/add';
   static const String myAds = 'api/v1/me';
+  static const String notification = 'api/v1/notification';
 }

@@ -25,6 +25,7 @@ dependencies:
   path: ^1.8.3
   permission_handler: ^10.4.3
   pinput: ^2.2.31
+  provider: ^6.0.5
   share_plus: ^7.0.2
   shared_preferences: ^2.1.1
   smooth_page_indicator: ^1.1.0
