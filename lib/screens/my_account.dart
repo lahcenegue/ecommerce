@@ -2,13 +2,29 @@ import 'package:ecommerce/screens/favorite_screen.dart';
 import 'package:ecommerce/screens/help_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../core/utils/app_colors.dart';
 import '../core/utils/cache_helper.dart';
 import '../core/widgets/costtum_card.dart';
+import '../data/logout_api.dart';
 import 'edit_profil_screen.dart';
 
-class MyAccount extends StatelessWidget {
-  const MyAccount({super.key});
+class MyAccount extends StatefulWidget {
+  final String info;
+  final String mobile;
+  const MyAccount({
+    super.key,
+    required this.info,
+    required this.mobile,
+  });
+
+  @override
+  State<MyAccount> createState() => _MyAccountState();
+}
+
+class _MyAccountState extends State<MyAccount> {
+  bool isApiCallProcess = false;
+  bool isPermi = true;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +67,7 @@ class MyAccount extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  CacheHelper.getData(key: PrefKeys.name),
+                                  widget.info,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: heightScreen * 0.03,
@@ -59,9 +75,9 @@ class MyAccount extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: heightScreen * 0.01),
-                                const Text(
-                                  '+96512345678',
-                                  style: TextStyle(
+                                Text(
+                                  widget.mobile,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
@@ -81,77 +97,125 @@ class MyAccount extends StatelessWidget {
             ),
           ),
           Positioned(
-              top: heightScreen * 0.19,
-              child: Container(
-                height: heightScreen * 0.6,
-                width: widthScreen,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 05,
+            top: heightScreen * 0.19,
+            child: Container(
+              height: heightScreen * 0.6,
+              width: widthScreen,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 05,
+              ),
+              child: ListView(
+                children: [
+                  // notification
+                  Container(
+                    height: heightScreen * 0.08,
+                    margin: const EdgeInsets.symmetric(vertical: 08),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(08),
+                      color: Colors.white,
+                    ),
+                    child: SwitchListTile(
+                      title: const Text('تفعيل الاشعارات'),
+                      secondary: Icon(
+                        Icons.notifications_active,
+                        color: AppColors.primary,
+                      ),
+                      value: isPermi,
+                      onChanged: (value) async {
+                        print(await Permission.notification.isGranted);
+                        if (await Permission.notification.isGranted) {
+                          setState(() {
+                            isPermi = true;
+                          });
+                        } else {
+                          setState(() {
+                            isPermi = false;
+                          });
+                        }
+                        await openAppSettings();
+                      },
+                    ),
+                  ),
+
+                  // favorite
+                  custtomCard(
+                    icon: Icon(
+                      Icons.favorite,
+                      color: AppColors.primary,
+                    ),
+                    title: 'المفضلة',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const FavoriteScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  //help
+                  custtomCard(
+                    icon: Icon(
+                      Icons.help,
+                      color: AppColors.primary,
+                    ),
+                    title: 'المساعدة',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const HelpScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  //log out
+                  custtomCard(
+                    icon: Icon(
+                      Icons.logout_rounded,
+                      color: AppColors.primary,
+                    ),
+                    title: 'تسجيل الخروج',
+                    onTap: () async {
+                      setState(() {
+                        isApiCallProcess = true;
+                      });
+                      await logoutApi(
+                              token: CacheHelper.getData(key: PrefKeys.token))
+                          .then((value) async {
+                        setState(() {
+                          isApiCallProcess = false;
+                        });
+                        if (value.logout == 'ok') {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const HomeScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                          CacheHelper.removeData(key: PrefKeys.name);
+                          CacheHelper.removeData(key: PrefKeys.token);
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: isApiCallProcess ? true : false,
+            child: Stack(
+              children: [
+                ModalBarrier(
+                  color: Colors.white.withOpacity(0.6),
+                  dismissible: true,
                 ),
-                child: ListView(
-                  children: [
-                    // notification
-                    custtomCard(
-                      icon: Icon(
-                        Icons.notifications,
-                        color: AppColors.primary,
-                      ),
-                      title: 'تفعيل الاشعارات',
-                      onTap: () {
-                        print('notification');
-                      },
-                    ),
-                    // favorite
-                    custtomCard(
-                      icon: Icon(
-                        Icons.favorite,
-                        color: AppColors.primary,
-                      ),
-                      title: 'المفضلة',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const FavoriteScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    //help
-                    custtomCard(
-                      icon: Icon(
-                        Icons.help,
-                        color: AppColors.primary,
-                      ),
-                      title: 'المساعدة',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const HelpScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    //log out
-                    custtomCard(
-                      icon: Icon(
-                        Icons.logout_rounded,
-                        color: AppColors.primary,
-                      ),
-                      title: 'تسجيل الخروج',
-                      onTap: () {
-                        CacheHelper.removeData(key: PrefKeys.name);
-                        CacheHelper.removeData(key: PrefKeys.token);
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                          (Route<dynamic> route) => false,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ))
+                const Center(
+                  child: CircularProgressIndicator(),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );

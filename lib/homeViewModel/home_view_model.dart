@@ -1,9 +1,11 @@
 import 'package:ecommerce/ViewModels/ads_view_model.dart';
 import 'package:ecommerce/ViewModels/categories_viewmodel.dart';
 import 'package:ecommerce/ViewModels/main_view_model.dart';
+import 'package:ecommerce/ViewModels/profil_view_model.dart';
 import 'package:ecommerce/data/ads_api.dart';
 import 'package:ecommerce/data/get_ads_api.dart';
 import 'package:ecommerce/data/sub_cat_api.dart';
+import 'package:ecommerce/models/profil_model.dart';
 import 'package:flutter/material.dart';
 import '../ViewModels/notification_view_model.dart';
 import '../ViewModels/subcat_view_model.dart';
@@ -11,6 +13,7 @@ import '../data/categories_api.dart';
 import '../data/main_api.dart';
 import '../data/my_ads_api.dart';
 import '../data/notification_api.dart';
+import '../data/profil_api.dart';
 import '../models/ads_model.dart';
 import '../models/categories_model.dart';
 import '../models/main_model.dart';
@@ -28,8 +31,16 @@ class HomeViewModel extends ChangeNotifier {
   List<AdsViewModel>? subCatAds;
   List<AdsViewModel>? myAds;
   List<NotificationViewModel>? listNotification;
+  ProfilViewModel? profilInfo;
 
 //functions
+
+  Future<void> fetchProfilInfo({required String token}) async {
+    ProfilModel jsonMap = await profilApi(token: token);
+    profilInfo = ProfilViewModel(profilModel: jsonMap);
+    notifyListeners();
+  }
+
   // list Banner Images
   Future<void> fetchMainData() async {
     MainModel jsonMap = await getMainData();

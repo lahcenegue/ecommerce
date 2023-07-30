@@ -7,7 +7,9 @@ class AppLinks {
   static const String getAds = 'api/v1/getads';
   static const String search = 'api/v1/search?search';
   static const String login = 'api/v1/login';
+  static const String logout = 'api/v1/logout';
   static const String addAds = 'api/v1/add';
   static const String myAds = 'api/v1/me';
   static const String notification = 'api/v1/notification';
+  static const String profil = 'api/v1/profile';
 }

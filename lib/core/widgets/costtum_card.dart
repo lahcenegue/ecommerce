@@ -10,7 +10,7 @@ Widget custtomCard(
       child: Container(
         height: heightScreen * 0.08,
         margin: const EdgeInsets.symmetric(vertical: 08),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.only(left: 20, right: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(08),
           color: Colors.white,
@@ -18,20 +18,9 @@ Widget custtomCard(
         child: Row(
           children: [
             icon,
-            const SizedBox(width: 10),
+            const SizedBox(width: 18),
             Text(title),
             const Spacer(),
-            Visibility(
-              visible: title == 'تفعيل الاشعارات' ? true : false,
-              child: Switch(
-                  // activeColor: Colors.grey,
-                  // activeTrackColor: Colors.grey.withOpacity(0.5),
-                  //inactiveThumbColor: Colors.blueGrey.shade600,
-                  //inactiveTrackColor: Colors.grey.shade400,
-                  //splashRadius: 30.0,
-                  value: true,
-                  onChanged: (value) {}),
-            ),
           ],
         ),
       ),

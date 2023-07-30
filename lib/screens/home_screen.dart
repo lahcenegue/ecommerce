@@ -7,8 +7,8 @@ import 'package:ecommerce/screens/my_announces.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import '../core/utils/app_icons.dart';
-import '../core/widgets/constum_button.dart';
 import '../core/widgets/costum_bottom_bar.dart';
+import '../core/widgets/signin_widget.dart';
 import '../homeViewModel/home_view_model.dart';
 import 'categories.dart';
 import 'main_screen.dart';
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeViewModel hvm = HomeViewModel();
 
   int page = 1;
-
+  List pages = [];
   late String token;
 
   @override
@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         token: token,
         page: page,
       );
+      hvm.fetchProfilInfo(token: token);
     }
     hvm.fetchMainData();
     hvm.fetchCategories();
@@ -55,58 +56,46 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double heightScreen = MediaQuery.of(context).size.height;
-    double widthScreen = MediaQuery.of(context).size.width;
+
     hvm.addListener(() {
       setState(() {});
     });
-    if (hvm.mainData == null || hvm.listCategories == null) {
-      return const Scaffold(
-        body: SplashScreen(),
-      );
+    if ((hvm.mainData == null) || (hvm.listCategories == null)) {
+      return const SplashScreen();
     } else {
-      List pages = [
-        MainScreen(
-          urlImages: hvm.listBannerImages!,
-          listCategories: hvm.listCategories!,
-          mainData: hvm.mainData!,
-        ),
-        CategoriesScreen(
-          categories: hvm.listCategories!,
-        ),
-        CacheHelper.getData(key: PrefKeys.token) == null
-            ? Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'الرجاء تسجيل الدخول أولاً للوصول إلى جميع الميزات الموجودة في Sooq.in',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: heightScreen * 0.022),
-                    ),
-                    SizedBox(height: heightScreen * 0.05),
-                    customButton(
-                      buttonWidth: widthScreen,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginMobileScreen(),
-                            ));
-                      },
-                      title: 'تسجيل الدخول',
-                      topPadding: 08,
-                    ),
-                  ],
-                ),
-              )
-            : MyAnnonces(
-                mainData: hvm.mainData!,
-              ),
-        CacheHelper.getData(key: PrefKeys.token) == null
-            ? const MoreScreen()
-            : const MyAccount(),
-      ];
+      if (CacheHelper.getData(key: PrefKeys.token) == null) {
+        pages = [
+          MainScreen(
+            urlImages: hvm.listBannerImages!,
+            listCategories: hvm.listCategories!,
+            mainData: hvm.mainData!,
+          ),
+          CategoriesScreen(
+            categories: hvm.listCategories!,
+          ),
+          signinWidget(),
+          const MoreScreen()
+        ];
+      } else {
+        pages = [
+          MainScreen(
+            urlImages: hvm.listBannerImages!,
+            listCategories: hvm.listCategories!,
+            mainData: hvm.mainData!,
+          ),
+          CategoriesScreen(
+            categories: hvm.listCategories!,
+          ),
+          MyAnnonces(
+            mainData: hvm.mainData!,
+          ),
+          MyAccount(
+            info: hvm.profilInfo!.info,
+            mobile: hvm.profilInfo!.phone,
+          ),
+        ];
+      }
+
       return Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(

@@ -11,7 +11,7 @@ Future<List<NotificationModel>> loadNotificationList(
       url = Uri.parse(
           "${AppLinks.mainLink}/${AppLinks.notification}/$page?token=$token");
     } else {
-      url = Uri.parse("${AppLinks.notification}/$page");
+      url = Uri.parse("${AppLinks.mainLink}/${AppLinks.notification}/$page");
     }
 
     http.Response response = await http.get(url);
