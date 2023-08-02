@@ -1,8 +1,10 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/homeViewModel/home_view_model.dart';
 import 'package:ecommerce/screens/notifications_screen.dart';
 import 'package:ecommerce/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 import '../ViewModels/categories_viewmodel.dart';
 import '../ViewModels/main_view_model.dart';
 import '../core/widgets/categories_box.dart';
@@ -11,14 +13,8 @@ import '../core/widgets/product_box.dart';
 import 'subcategory_ads.dart';
 
 class MainScreen extends StatelessWidget {
-  final List urlImages;
-  final List listCategories;
-  final MainViewModel mainData;
   const MainScreen({
     super.key,
-    required this.urlImages,
-    required this.listCategories,
-    required this.mainData,
   });
 
   @override
@@ -119,7 +115,8 @@ class MainScreen extends StatelessWidget {
                     const Spacer(),
                     BannerSlider(
                       height: heightScreen * 0.25,
-                      urlImages: urlImages,
+                      urlImages:
+                          Provider.of<HomeViewModel>(context).listBannerImages!,
                     ),
                   ],
                 ),
@@ -133,11 +130,15 @@ class MainScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount: listCategories.length,
+                    itemCount: Provider.of<HomeViewModel>(context)
+                        .listCategories!
+                        .length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 20),
                     itemBuilder: (BuildContext context, int index) {
-                      CategoriesViewModel categorie = listCategories[index];
+                      CategoriesViewModel categorie =
+                          Provider.of<HomeViewModel>(context)
+                              .listCategories![index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
@@ -180,8 +181,11 @@ class MainScreen extends StatelessWidget {
                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                   ),
-                  itemCount: mainData.adsLenght,
+                  itemCount:
+                      Provider.of<HomeViewModel>(context).mainData!.adsLenght,
                   itemBuilder: (context, index) {
+                    MainViewModel mainData =
+                        Provider.of<HomeViewModel>(context).mainData!;
                     return productBox(
                       widthSceeren: widthScreen,
                       id: mainData.adsId![index],

@@ -30,6 +30,7 @@ class _MyAccountState extends State<MyAccount> {
   Widget build(BuildContext context) {
     double heightScreen = MediaQuery.of(context).size.height;
     double widthScreen = MediaQuery.of(context).size.width;
+
     return Scaffold(
       extendBody: true,
       body: Stack(
@@ -124,7 +125,6 @@ class _MyAccountState extends State<MyAccount> {
                       ),
                       value: isPermi,
                       onChanged: (value) async {
-                        print(await Permission.notification.isGranted);
                         if (await Permission.notification.isGranted) {
                           setState(() {
                             isPermi = true;

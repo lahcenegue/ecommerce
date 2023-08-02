@@ -6,6 +6,7 @@ import 'package:ecommerce/screens/my_account.dart';
 import 'package:ecommerce/screens/my_announces.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../core/utils/app_icons.dart';
 import '../core/widgets/costum_bottom_bar.dart';
 import '../core/widgets/signin_widget.dart';
@@ -38,8 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       hvm.fetchProfilInfo(token: token);
     }
-    hvm.fetchMainData();
-    hvm.fetchCategories();
 
     super.initState();
   }
@@ -60,32 +59,22 @@ class _HomeScreenState extends State<HomeScreen> {
     hvm.addListener(() {
       setState(() {});
     });
-    if ((hvm.mainData == null) || (hvm.listCategories == null)) {
+    if ((Provider.of<HomeViewModel>(context).listCategories == null) ||
+        (Provider.of<HomeViewModel>(context).mainData == null)) {
+      print('================================ null');
       return const SplashScreen();
     } else {
       if (CacheHelper.getData(key: PrefKeys.token) == null) {
         pages = [
-          MainScreen(
-            urlImages: hvm.listBannerImages!,
-            listCategories: hvm.listCategories!,
-            mainData: hvm.mainData!,
-          ),
-          CategoriesScreen(
-            categories: hvm.listCategories!,
-          ),
+          const MainScreen(),
+          const CategoriesScreen(),
           signinWidget(),
           const MoreScreen()
         ];
       } else {
         pages = [
-          MainScreen(
-            urlImages: hvm.listBannerImages!,
-            listCategories: hvm.listCategories!,
-            mainData: hvm.mainData!,
-          ),
-          CategoriesScreen(
-            categories: hvm.listCategories!,
-          ),
+          const MainScreen(),
+          const CategoriesScreen(),
           MyAnnonces(
             mainData: hvm.mainData!,
           ),

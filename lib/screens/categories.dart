@@ -2,21 +2,23 @@ import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/core/widgets/icon_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
+import '../homeViewModel/home_view_model.dart';
 import 'subcategory_ads.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  final List categories;
+  //final List categories;
   const CategoriesScreen({
     super.key,
-    required this.categories,
+    //required this.categories,
   });
 
   @override
   Widget build(BuildContext context) {
     double heightScreen = MediaQuery.of(context).size.height;
     return DefaultTabController(
-      length: categories.length,
+      length: Provider.of<HomeViewModel>(context).listCategories!.length,
       //length: 2,
       child: Scaffold(
         appBar: AppBar(
@@ -43,7 +45,7 @@ class CategoriesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(08),
                 ),
                 tabs: List.generate(
-                  categories.length,
+                  Provider.of<HomeViewModel>(context).listCategories!.length,
                   (index) {
                     return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 05),
@@ -52,10 +54,14 @@ class CategoriesScreen extends StatelessWidget {
                             SizedBox(
                                 height: heightScreen * 0.03,
                                 child: iconPiker(
-                                  categories[index].name,
+                                  Provider.of<HomeViewModel>(context)
+                                      .listCategories![index]
+                                      .name!,
                                 )),
                             const SizedBox(width: 08),
-                            Text(categories[index].name),
+                            Text(Provider.of<HomeViewModel>(context)
+                                .listCategories![index]
+                                .name!),
                           ],
                         ));
                   },
@@ -65,8 +71,13 @@ class CategoriesScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: List.generate(categories.length, (index) {
-            return SubCatWidget(subCat: categories[index].subCat);
+          children: List.generate(
+              Provider.of<HomeViewModel>(context).listCategories!.length,
+              (index) {
+            return SubCatWidget(
+                subCat: Provider.of<HomeViewModel>(context)
+                    .listCategories![index]
+                    .subCat!);
           }),
         ),
       ),
