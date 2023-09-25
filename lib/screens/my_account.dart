@@ -1,8 +1,10 @@
+import 'package:ecommerce/homeViewModel/home_view_model.dart';
 import 'package:ecommerce/screens/favorite_screen.dart';
 import 'package:ecommerce/screens/help_screen.dart';
 import 'package:ecommerce/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import '../core/utils/app_colors.dart';
 import '../core/utils/cache_helper.dart';
 import '../core/widgets/costtum_card.dart';
@@ -10,12 +12,8 @@ import '../data/logout_api.dart';
 import 'edit_profil_screen.dart';
 
 class MyAccount extends StatefulWidget {
-  final String info;
-  final String mobile;
   const MyAccount({
     super.key,
-    required this.info,
-    required this.mobile,
   });
 
   @override
@@ -68,7 +66,9 @@ class _MyAccountState extends State<MyAccount> {
                             Column(
                               children: [
                                 Text(
-                                  widget.info,
+                                  Provider.of<HomeViewModel>(context)
+                                      .profilInfo!
+                                      .info,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: heightScreen * 0.03,
@@ -77,7 +77,9 @@ class _MyAccountState extends State<MyAccount> {
                                 ),
                                 SizedBox(height: heightScreen * 0.01),
                                 Text(
-                                  widget.mobile,
+                                  Provider.of<HomeViewModel>(context)
+                                      .profilInfo!
+                                      .phone,
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),

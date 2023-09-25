@@ -58,7 +58,7 @@ class HomeViewModel extends ChangeNotifier {
         jsonMap.map((e) => CategoriesViewModel(categoriesModel: e)).toList();
 
     for (int i = 0; i < listCategories!.length; i++) {
-      catNames.add(listCategories![i].name!);
+      catNames.add(listCategories![i].name!.toString());
     }
 
     notifyListeners();

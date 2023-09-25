@@ -43,6 +43,7 @@ class _BannerSliderState extends State<BannerSlider> {
 
   Widget buildImage(String urlImage, int index) => Container(
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
             image: NetworkImage(urlImage),
             fit: BoxFit.cover,

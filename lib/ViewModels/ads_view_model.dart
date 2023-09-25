@@ -45,4 +45,22 @@ class AdsViewModel {
   String? get color {
     return _adsModel.color;
   }
+
+  List<String>? get details {
+    List<String> listDetails = [];
+    if (_adsModel.details!.isNotEmpty) {
+      for (int i = 0; i < _adsModel.details!.length; i++) {
+        listDetails.add(_adsModel.details![i].toString());
+      }
+    }
+    return listDetails;
+  }
+
+  String? get userName {
+    return _adsModel.user!.name!;
+  }
+
+  String? get mobile {
+    return _adsModel.user!.mobile!;
+  }
 }

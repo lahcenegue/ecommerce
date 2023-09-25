@@ -1,8 +1,10 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/core/utils/app_strings.dart';
 import 'package:ecommerce/core/widgets/button_favorite.dart';
+import 'package:ecommerce/core/widgets/lancher_box.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../core/utils/app_links.dart';
 import '../core/widgets/image_slider.dart';
 import '../homeViewModel/home_view_model.dart';
@@ -63,59 +65,48 @@ class _AdsScreenState extends State<AdsScreen> {
               ),
               const SizedBox(width: 08),
               Text(
-                'ابو عبد المحسن',
+                hvm.adsData!.userName!,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: heightScreen * 0.018,
                 ),
               ),
               const Spacer(),
-              Container(
-                height: widthScreen * 0.12,
-                width: widthScreen * 0.12,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.phone,
-                    size: heightScreen * 0.03,
-                    color: Colors.white,
-                  ),
-                ),
+              lancherBox(
+                icon: Icons.phone,
+                width: widthScreen,
+                onTap: () async {
+                  final Uri launchUri = Uri(
+                    scheme: 'tel',
+                    path: hvm.adsData!.mobile,
+                  );
+                  await launchUrl(launchUri);
+                },
               ),
               const SizedBox(width: 05),
-              Container(
-                height: widthScreen * 0.12,
-                width: widthScreen * 0.12,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.message,
-                    size: heightScreen * 0.03,
-                    color: Colors.white,
-                  ),
-                ),
+              lancherBox(
+                icon: Icons.message,
+                width: widthScreen,
+                onTap: () async {
+                  final Uri launchUri = Uri(
+                    scheme: 'sms',
+                    path: hvm.adsData!.mobile,
+                    queryParameters: <String, String>{
+                      'body': Uri.encodeComponent('${hvm.adsData!.title}'),
+                    },
+                  );
+                  await launchUrl(launchUri);
+                },
               ),
               const SizedBox(width: 05),
-              Container(
-                height: widthScreen * 0.12,
-                width: widthScreen * 0.12,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.perm_phone_msg,
-                    size: heightScreen * 0.03,
-                    color: Colors.white,
-                  ),
-                ),
+              lancherBox(
+                icon: Icons.perm_phone_msg,
+                width: widthScreen,
+                onTap: () async {
+                  final Uri whatsapp =
+                      Uri.parse('https://wa.me/${hvm.adsData!.mobile}');
+                  launchUrl(whatsapp);
+                },
               ),
             ],
           ),
@@ -163,7 +154,7 @@ class _AdsScreenState extends State<AdsScreen> {
                           IconButton(
                             onPressed: () {
                               Share.share(
-                                  'Discover this product ${AppLinks.mainLink}/play/${hvm.adsData!.id}');
+                                  '${hvm.adsData!.title} \n ${hvm.adsData!.desc} \n ${AppLinks.mainLink}/play/${hvm.adsData!.id}');
                             },
                             icon: Icon(
                               Icons.share,
@@ -199,7 +190,7 @@ class _AdsScreenState extends State<AdsScreen> {
                       Text(
                         hvm.adsData!.price! == 'None'
                             ? hvm.adsData!.price!
-                            : '${hvm.adsData!.price!} ريال',
+                            : '${hvm.adsData!.price!} ${AppStrings.currency}',
                         style: TextStyle(
                           fontSize: widthScreen * 0.05,
                           fontWeight: FontWeight.w500,
@@ -216,7 +207,20 @@ class _AdsScreenState extends State<AdsScreen> {
                       fontSize: widthScreen * 0.04,
                       fontWeight: FontWeight.w400,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('تفاصيل'),
+                  const SizedBox(height: 5),
+                  ListView.builder(
+                    padding: const EdgeInsets.all(20),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: hvm.adsData!.details!.length,
+                    itemBuilder: (context, index) {
+                      return Text(hvm.adsData!.details![index]);
+                    },
+                  ),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),

@@ -7,6 +7,9 @@ import '../core/utils/app_links.dart';
 Future<List<AdsModel>> apiSearch({required String query}) async {
   try {
     var url = Uri.parse("${AppLinks.mainLink}/${AppLinks.search}=$query");
+    print(
+        '----------------------------------------------------------------------------');
+    print(url);
 
     http.Response response = await http.get(
       url,

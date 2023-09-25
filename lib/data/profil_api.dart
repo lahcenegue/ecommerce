@@ -8,6 +8,7 @@ Future<ProfilModel> profilApi({required String token}) async {
   try {
     var url =
         Uri.parse("${AppLinks.mainLink}/${AppLinks.profil}/?token=$token");
+
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {

@@ -1,4 +1,5 @@
 import 'package:ecommerce/homeViewModel/home_view_model.dart';
+import 'package:ecommerce/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -55,6 +56,19 @@ class _SubCategoryAdsState extends State<SubCategoryAds> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: MySearchDelegate(),
+                );
+              },
+              icon: const Icon(
+                Icons.search,
+              ),
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(
               AppBar().preferredSize.height,
@@ -130,10 +144,15 @@ class _SubCatAdsState extends State<SubCatAds> {
   @override
   void initState() {
     controller.addListener(_scrollListener);
-    hvm.fetchSubCatAds(
+    hvm
+        .fetchSubCatAds(
       id: widget.id,
       page: page,
-    );
+    )
+        .whenComplete(() {
+      listAds = listAds + hvm.subCatAds!;
+    });
+
     super.initState();
   }
 
@@ -156,12 +175,11 @@ class _SubCatAdsState extends State<SubCatAds> {
     hvm.addListener(() {
       setState(() {});
     });
-    if (hvm.subCatAds == null) {
+    if (listAds.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      listAds = listAds + hvm.subCatAds!;
       return MasonryGridView.builder(
         controller: controller,
         physics: const BouncingScrollPhysics(),
@@ -199,15 +217,19 @@ class _SubCatAdsState extends State<SubCatAds> {
   }
 
   Future<void> _scrollListener() async {
-    if (isLoadingMore) return;
     if (controller.position.pixels == controller.position.maxScrollExtent) {
+      print('===============>>>>>>>>>>>>');
+      print('======================================= max');
       setState(() {
         isLoadingMore = true;
       });
-      await Future.delayed(const Duration(seconds: 2)).then((value) async {
+
+      await Future.delayed(const Duration(milliseconds: 500))
+          .then((value) async {
         setState(() {
           page = page + 1;
         });
+        print(page);
 
         await hvm
             .fetchSubCatAds(
@@ -217,6 +239,7 @@ class _SubCatAdsState extends State<SubCatAds> {
             .then((value) {
           setState(
             () {
+              listAds = listAds + hvm.subCatAds!;
               isLoadingMore = false;
             },
           );

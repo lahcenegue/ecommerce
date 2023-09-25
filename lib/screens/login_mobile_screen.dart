@@ -29,150 +29,154 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     double widthScreen = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-          body: Stack(
-        children: [
-          SizedBox(
-            height: heightScreen,
-            width: widthScreen,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  height: heightScreen * 0.43,
-                  width: widthScreen,
-                  color: AppColors.primary,
-                ),
-              ],
-            ),
+          appBar: AppBar(
+            backgroundColor: AppColors.primary,
           ),
-          Positioned(
-            top: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              width: widthScreen,
-              height: heightScreen,
-              child: Form(
-                key: globalKey,
-                child: ListView(
+          body: Stack(
+            children: [
+              SizedBox(
+                height: heightScreen,
+                width: widthScreen,
+                child: Column(
                   children: [
-                    SizedBox(
-                      height: heightScreen * 0.25,
-                    ),
-                    Text(
-                      'ادخل رقم هاتفك لتسجيل الدخول',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: heightScreen * 0.03,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: heightScreen * 0.1,
-                    ),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: IntlPhoneField(
-                        languageCode: "ar",
-                        countries: const <Country>[
-                          Country(
-                            name: "Kuwait",
-                            nameTranslations: {
-                              "sk": "Kuvajt",
-                              "se": "Kuwait",
-                              "pl": "Kuwejt",
-                              "no": "Kuwait",
-                              "ja": "クウェート",
-                              "it": "Kuwait",
-                              "zh": "科威特",
-                              "nl": "Koeweit",
-                              "de": "Kuwait",
-                              "fr": "Koweït",
-                              "es": "Kuwait",
-                              "en": "Kuwait",
-                              "pt_BR": "Kuwait",
-                              "sr-Cyrl": "Кувајт",
-                              "sr-Latn": "Kuvajt",
-                              "zh_TW": "科威特",
-                              "tr": "Kuveyt",
-                              "ro": "Kuweit",
-                              "ar": "الكويت",
-                              "fa": "کویت",
-                              "yue": "科威特"
-                            },
-                            flag: "🇰🇼",
-                            code: "KW",
-                            dialCode: "965",
-                            minLength: 8,
-                            maxLength: 8,
-                          ),
-                        ],
-                        textAlign: TextAlign.left,
-                        invalidNumberMessage: 'قمت بإدخال رقم خاطئ',
-                        onChanged: (value) {
-                          phoneNumber = value.completeNumber;
-                        },
-                        decoration: const InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(08),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // login button
-                    customButton(
-                      title: 'ارسل رمز التحقق',
-                      topPadding: 40,
-                      buttonWidth: widthScreen,
-                      onPressed: () {
-                        String newphone = phoneNumber.replaceAll('+965', '');
-                        if (validateAndSave()) {
-                          setState(() {
-                            isApiCallProcess = true;
-                          });
-                          apiLoginMobile(newphone).then((value) {
-                            setState(() {
-                              isApiCallProcess = false;
-                            });
-                            if (value.msg == 'ok') {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginCodeScreen(
-                                    phoneNumber: newphone,
-                                  ),
-                                ),
-                              );
-                            }
-                          });
-                        }
-                      },
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      height: heightScreen * 0.43,
+                      width: widthScreen,
+                      color: AppColors.primary,
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          Visibility(
-            visible: isApiCallProcess ? true : false,
-            child: Stack(
-              children: [
-                ModalBarrier(
-                  color: Colors.white.withOpacity(0.6),
-                  dismissible: true,
+              Positioned(
+                top: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  width: widthScreen,
+                  height: heightScreen,
+                  child: Form(
+                    key: globalKey,
+                    child: ListView(
+                      children: [
+                        SizedBox(
+                          height: heightScreen * 0.25,
+                        ),
+                        Text(
+                          'ادخل رقم هاتفك لتسجيل الدخول',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: heightScreen * 0.03,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: heightScreen * 0.1,
+                        ),
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: IntlPhoneField(
+                            languageCode: "ar",
+                            countries: const <Country>[
+                              Country(
+                                name: "Kuwait",
+                                nameTranslations: {
+                                  "sk": "Kuvajt",
+                                  "se": "Kuwait",
+                                  "pl": "Kuwejt",
+                                  "no": "Kuwait",
+                                  "ja": "クウェート",
+                                  "it": "Kuwait",
+                                  "zh": "科威特",
+                                  "nl": "Koeweit",
+                                  "de": "Kuwait",
+                                  "fr": "Koweït",
+                                  "es": "Kuwait",
+                                  "en": "Kuwait",
+                                  "pt_BR": "Kuwait",
+                                  "sr-Cyrl": "Кувајт",
+                                  "sr-Latn": "Kuvajt",
+                                  "zh_TW": "科威特",
+                                  "tr": "Kuveyt",
+                                  "ro": "Kuweit",
+                                  "ar": "الكويت",
+                                  "fa": "کویت",
+                                  "yue": "科威特"
+                                },
+                                flag: "🇰🇼",
+                                code: "KW",
+                                dialCode: "965",
+                                minLength: 8,
+                                maxLength: 8,
+                              ),
+                            ],
+                            textAlign: TextAlign.left,
+                            invalidNumberMessage: 'قمت بإدخال رقم خاطئ',
+                            onChanged: (value) {
+                              phoneNumber = value.completeNumber;
+                            },
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(08),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // login button
+                        customButton(
+                          title: 'ارسل رمز التحقق',
+                          topPadding: 40,
+                          buttonWidth: widthScreen,
+                          onPressed: () {
+                            String newphone =
+                                phoneNumber.replaceAll('+965', '');
+                            if (validateAndSave()) {
+                              setState(() {
+                                isApiCallProcess = true;
+                              });
+                              apiLoginMobile(newphone).then((value) {
+                                setState(() {
+                                  isApiCallProcess = false;
+                                });
+                                if (value.msg == 'ok') {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginCodeScreen(
+                                        phoneNumber: newphone,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                const Center(
-                  child: CircularProgressIndicator(),
-                )
-              ],
-            ),
-          ),
-        ],
-      )),
+              ),
+              Visibility(
+                visible: isApiCallProcess ? true : false,
+                child: Stack(
+                  children: [
+                    ModalBarrier(
+                      color: Colors.white.withOpacity(0.6),
+                      dismissible: true,
+                    ),
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )),
     );
   }
 

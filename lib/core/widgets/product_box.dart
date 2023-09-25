@@ -42,7 +42,18 @@ Widget productBox({
                       ? const Icon(Icons.error)
                       : CachedNetworkImage(
                           imageUrl: image,
-                          fit: BoxFit.cover,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(
                             child: CircularProgressIndicator(

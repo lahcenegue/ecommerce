@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../utils/app_strings.dart';
@@ -6,14 +6,25 @@ import '../utils/app_strings.dart';
 class OneSignalControler {
   static String? osUserID = "";
   static Future<void> inite() async {
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setAppId(AppStrings.onSignalID);
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+    OneSignal.Debug.setLogLevel(OSLogLevel.error);
 
-    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-      debugPrint("Accepted permission: $accepted");
+    OneSignal.initialize(AppStrings.onSignalID);
+
+    OneSignal.Notifications.clearAll();
+
+    OneSignal.User.pushSubscription.addObserver((state) {
+      // debugPrint(OneSignal.User.pushSubscription.optedIn.toString());
+      // debugPrint(OneSignal.User.pushSubscription.id);
+      // debugPrint(OneSignal.User.pushSubscription.token);
+      debugPrint(state.current.jsonRepresentation());
     });
 
-    final status = await OneSignal.shared.getDeviceState();
-    osUserID = status?.userId;
+    OneSignal.Notifications.addPermissionObserver((state) {
+      debugPrint("Has permission $state");
+    });
+
+    osUserID = OneSignal.User.pushSubscription.id;
   }
 }

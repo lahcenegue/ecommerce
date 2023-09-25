@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.3 <4.0.0'
+  sdk: '>=3.0.6 <4.0.0'
 
 dependencies:
   cached_network_image: ^3.2.3
@@ -14,27 +14,34 @@ dependencies:
   dropdown_search: ^5.0.6
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   flutter_localization: ^0.1.11
   flutter_localizations:
     sdk: flutter
-  flutter_staggered_grid_view: ^0.6.2
-  http: ^1.0.0
+  flutter_staggered_grid_view: ^0.7.0
+  http: ^1.1.0
   image_picker: ^1.0.1
   intl_phone_field: ^3.2.0
-  onesignal_flutter: ^3.5.1
+  onesignal_flutter: ^5.0.0
   path: ^1.8.3
   permission_handler: ^10.4.3
-  pinput: ^2.2.31
+  pinput: ^3.0.1
   provider: ^6.0.5
   share_plus: ^7.0.2
   shared_preferences: ^2.1.1
   smooth_page_indicator: ^1.1.0
   sqflite: ^2.2.8+4
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/icon.jpeg"
+  remove_alpha_ios: true
 
 flutter:
 
@@ -48,3 +55,7 @@ flutter:
     - family: MessiriFont
       fonts:
         - asset: assets/fonts/ElMessiri-VariableFont_wght.ttf
+
+    - family: NotoFont
+      fonts:
+        - asset: assets/fonts/NotoKufiArabic-Regular.ttf

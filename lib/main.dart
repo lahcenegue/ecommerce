@@ -1,11 +1,13 @@
 import 'package:ecommerce/core/widgets/check_notification.dart';
 import 'package:ecommerce/screens/home_screen.dart';
+import 'package:ecommerce/screens/login_mobile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'core/utils/cache_helper.dart';
 import 'homeViewModel/home_view_model.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -27,10 +29,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    print('init state ++++++++++++++++');
-
     hvm.fetchMainData();
     hvm.fetchCategories();
+    if (CacheHelper.getData(key: PrefKeys.token) != null) {
+      hvm.fetchProfilInfo(token: CacheHelper.getData(key: PrefKeys.token));
+      hvm.fetchmyAds(
+        token: CacheHelper.getData(key: PrefKeys.token),
+        page: 1,
+      );
+    }
+
     super.initState();
   }
 
@@ -42,6 +50,11 @@ class _MyAppState extends State<MyApp> {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
+        initialRoute: '/',
+        routes: {
+          "login": (BuildContext context) => const LoginMobileScreen(),
+        },
         localizationsDelegates: const [
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -52,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         ],
         locale: const Locale("ar"),
         theme: ThemeData(
-          fontFamily: 'MessiriFont',
+          fontFamily: 'NotoFont',
           useMaterial3: true,
           colorScheme:
               ColorScheme.fromSeed(seedColor: Colors.deepPurple).copyWith(

@@ -7,6 +7,7 @@ Future<AdsModel> getAdsData({required int id}) async {
   AdsModel? adsModel;
   try {
     Uri url = Uri.parse('${AppLinks.mainLink}/${AppLinks.adsPrefix}/$id');
+    print(url);
 
     http.Response response = await http.get(url);
 

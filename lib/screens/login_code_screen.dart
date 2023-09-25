@@ -1,11 +1,12 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
+import 'package:ecommerce/main.dart';
 import 'package:ecommerce/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 import '../core/utils/cache_helper.dart';
 import '../core/widgets/constum_button.dart';
 import '../data/api_login_code.dart';
-import 'home_screen.dart';
 
 class LoginCodeScreen extends StatefulWidget {
   final String phoneNumber;
@@ -154,6 +155,7 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                           setState(() {
                             isApiCallProcess = false;
                           });
+
                           if (value.code == null) {
                             if (value.user == "new") {
                               Navigator.of(context).pushAndRemoveUntil(
@@ -170,12 +172,9 @@ class _LoginCodeScreenState extends State<LoginCodeScreen> {
                                   key: PrefKeys.token, value: value.token);
                               CacheHelper.saveData(
                                   key: PrefKeys.name, value: value.name);
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeScreen(),
-                                ),
-                                (Route<dynamic> route) => false,
-                              );
+
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/', (_) => false);
                             }
                           } else if (value.code == 'error') {
                             showDialog(

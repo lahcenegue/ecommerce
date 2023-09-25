@@ -9,12 +9,6 @@ class MySearchDelegate extends SearchDelegate {
   String get searchFieldLabel => 'أدخل كلمة البحث';
 
   @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-        onPressed: () => close(context, null),
-        icon: const Icon(Icons.arrow_back),
-      );
-
-  @override
   List<Widget>? buildActions(BuildContext context) => [
         IconButton(
           onPressed: () {
@@ -29,15 +23,29 @@ class MySearchDelegate extends SearchDelegate {
       ];
 
   @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+        onPressed: () => close(context, null),
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation,
+        ),
+      );
+
+  @override
   Widget buildResults(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 40),
       child: FutureBuilder(
         future: apiSearch(query: query),
         builder:
             (BuildContext context, AsyncSnapshot<List<AdsModel>> snapshot) {
-          if (snapshot.hasData) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            print('=================================');
+            print(snapshot.data!.length);
+            print('=================================');
             return ListView.separated(
               itemCount: snapshot.data!.length,
               separatorBuilder: (buildContext, index) {
@@ -68,10 +76,6 @@ class MySearchDelegate extends SearchDelegate {
                       );
                     });
               },
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
             );
           }
         },

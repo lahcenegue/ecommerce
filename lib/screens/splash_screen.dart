@@ -5,9 +5,21 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    double widthScreen = MediaQuery.of(context).size.width;
+    return Scaffold(
       body: Center(
-        child: Text('Sooq.i n'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icons/icon.png',
+              width: widthScreen * 0.25,
+              height: widthScreen * 0.25,
+            ),
+            const SizedBox(height: 25),
+            const CircularProgressIndicator(),
+          ],
+        ),
       ),
     );
   }

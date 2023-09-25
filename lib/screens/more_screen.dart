@@ -65,9 +65,7 @@ class MoreScreen extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                     title: 'تفعيل الاشعارات',
-                    onTap: () {
-                      print('notification');
-                    },
+                    onTap: () {},
                   ),
                   // favorite
                   custtomCard(

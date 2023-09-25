@@ -24,102 +24,67 @@ class MainScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.primary,
+          leading: IconButton(
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: MySearchDelegate(),
+              );
+            },
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+          ),
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationsScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.notifications_none_rounded,
+                    color: Colors.white,
+                    size: 34,
+                  ),
+                ),
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: Container(
+                    height: 10,
+                    width: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: heightScreen * 0.35,
-                color: AppColors.primary,
-                child: Column(
-                  children: [
-                    Container(
-                      height: heightScreen * 0.1,
-                      width: widthScreen,
-                      padding: const EdgeInsets.all(12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              showSearch(
-                                context: context,
-                                delegate: MySearchDelegate(),
-                              );
-                            },
-                            child: SizedBox(
-                              width: widthScreen * 0.8,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.search,
-                                        size: 32,
-                                        color: Colors.white.withOpacity(0.5),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Text(
-                                        'بحث',
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.5),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Divider(
-                                    height: 2,
-                                    color: Colors.white.withOpacity(0.5),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Stack(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const NotificationsScreen(),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.notifications_none_rounded,
-                                  color: Colors.white,
-                                  size: 34,
-                                ),
-                              ),
-                              Positioned(
-                                top: 12,
-                                right: 12,
-                                child: Container(
-                                  height: 10,
-                                  width: 10,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    BannerSlider(
-                      height: heightScreen * 0.25,
-                      urlImages:
-                          Provider.of<HomeViewModel>(context).listBannerImages!,
-                    ),
-                  ],
-                ),
+              Column(
+                children: [
+                  const SizedBox(height: 10),
+                  BannerSlider(
+                    height: heightScreen * 0.3,
+                    urlImages:
+                        Provider.of<HomeViewModel>(context).listBannerImages!,
+                  ),
+                ],
               ),
 
               // Categories

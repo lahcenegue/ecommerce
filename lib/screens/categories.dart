@@ -1,5 +1,6 @@
 import 'package:ecommerce/core/utils/app_colors.dart';
 import 'package:ecommerce/core/widgets/icon_piker.dart';
+import 'package:ecommerce/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -8,10 +9,8 @@ import '../homeViewModel/home_view_model.dart';
 import 'subcategory_ads.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  //final List categories;
   const CategoriesScreen({
     super.key,
-    //required this.categories,
   });
 
   @override
@@ -22,8 +21,20 @@ class CategoriesScreen extends StatelessWidget {
       //length: 2,
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title: const Text('الأقسام'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: MySearchDelegate(),
+                );
+              },
+              icon: const Icon(
+                Icons.search,
+              ),
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(
               AppBar().preferredSize.height,

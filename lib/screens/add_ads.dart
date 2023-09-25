@@ -190,6 +190,7 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
                           height: heightScreen * 0.072,
                           child: DropdownSearch(
                             items: widget.catNames,
+                            //////////////////////////////////////////////////////////////=========>
                             selectedItem: category,
                             onChanged: (value) {
                               setState(() {
@@ -270,7 +271,7 @@ class _AddAdsScreenState extends State<AddAdsScreen> {
                         //price
 
                         customTextFormField(
-                          hintText: 'الثمن',
+                          hintText: 'السعر',
                           onChanged: (value) {
                             addAdsRequest.amount = value;
                           },

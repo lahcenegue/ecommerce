@@ -7,9 +7,10 @@ import '../models/main_model.dart';
 Future<MainModel> getMainData() async {
   MainModel? mainModel;
   try {
-    var url = Uri.parse('${AppLinks.mainLink}/${AppLinks.mainPrefix}');
+    Uri url = Uri.parse('${AppLinks.mainLink}/${AppLinks.mainPrefix}');
 
     http.Response response = await http.get(url);
+
     if (response.statusCode == 200) {
       var data = convert.jsonDecode(response.body);
 
